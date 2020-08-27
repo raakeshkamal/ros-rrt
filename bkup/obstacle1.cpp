@@ -12,48 +12,68 @@
 using namespace std;
 using namespace Eigen;
 
+const int STEP_SIZE = 20;
+const int MAX_ITER = 5000;
 
-const int STEP_SIZE = 10;
-const int MAX_ITER = 15000;
-
-bool isSegmentObstacle(const cv::Mat &img, const Vector2i &nearestPos, const Vector2i &newPos)
+void isSegmentObstacle(const cv::Mat &img, const Vector2i nearestPos, Vector2i *newPos)
 {
-    int startX, startY, endX, endY;
-    if (nearestPos.x() < newPos.x())
+    Vector2i start, end;
+    start = nearestPos;
+    end = *newPos;
+    float m;
+    int c, i, j;
+    if (end.x() != start.x())
     {
-        startX = nearestPos.x();
-        endX = newPos.x();
-    }
-    else
-    {
-        endX = nearestPos.x();
-        startX = newPos.x();
-    }
-    if (nearestPos.y() < newPos.y())
-    {
-        startY = nearestPos.y();
-        endY = newPos.y();
-    }
-    else
-    {
-        endY = nearestPos.y();
-        startY = newPos.y();
-    }
-    for (int i = startX; i <= endX; i++)
-    {
-        for (int j = startY; j <= endY; j++)
+        m = ((float)(end.y() - start.y())) / ((float)(end.x() - start.x()));
+        c = start.y();
+        if (start.x() < end.x())
         {
-            if (img.at<uchar>(j, i) == 255)
-                return true;
+            for (i = start.x(); i <= end.x(); i++)
+            {
+                j = (int)(m * (i - start.x())) + c;
+                if ((int)(img.at<uchar>(j, i)) == 255)
+                    break;
+            }
+        }
+        else
+        {
+            for (i = start.x(); i >= end.x(); i--)
+            {
+                j = (int)(m * (i - start.x())) + c;
+                if ((int)(img.at<uchar>(j, i)) == 255)
+                    break;
+            }
         }
     }
-    return false;
+    else
+    {
+        i = start.x();
+        if (start.y() < end.y())
+        {
+            for (j = start.y(); j <= end.y(); j++)
+            {
+                if ((int)(img.at<uchar>(j, i)) == 255)
+                    break;
+            }
+        }
+        else
+        {
+            for (j = start.y(); j >= end.y(); j--)
+            {
+                if ((int)(img.at<uchar>(j, i)) == 255)
+                    break;
+            }
+        }
+    }
+
+    newPos->x() = i;
+    newPos->y() = j;
 }
 
 int main(int argc, char **argv)
 {
     srand(time(0));
-    cv::String path = "/home/raakesh/Documents/ros-rrt/src/map3.png";
+    cv::String path = "/home/raakesh/Documents/ros-rrt/src/map1.png";
     cv::Mat image, display;
     image = cv::imread(path, CV_8UC1);               // Read the file
     display = cv::imread(path, CV_LOAD_IMAGE_COLOR); // Read the file
@@ -82,19 +102,15 @@ int main(int argc, char **argv)
             {
                 Vector2i newPos = rrt->newConfig(q->position, qNearest->position);
                 //obstacle checks
-                if (!isSegmentObstacle(image, qNearest->position, newPos))
-                {
-                    Node *qNew = new Node;
-                    qNew->position = newPos;
+                avoidObstacles(image, qNearest->position, &newPos);
+                Node *qNew = new Node;
+                qNew->position = newPos;
 
-                    rrt->add(qNearest, qNew);
-                    cv::circle(display, cv::Point(qNew->position.x(), qNew->position.y()), 1,
-                               cv::Scalar(0, 255, 0), cv::FILLED, cv::LINE_8);
-                    cv::line(display, cv::Point(qNew->position.x(), qNew->position.y()),
-                             cv::Point(qNearest->position.x(), qNearest->position.y()), cv::Scalar(255, 0, 0));
-                }
-                else
-                    i--;
+                rrt->add(qNearest, qNew);
+                cv::circle(display, cv::Point(qNew->position.x(), qNew->position.y()), 1,
+                           cv::Scalar(0, 255, 0), cv::FILLED, cv::LINE_8);
+                cv::line(display, cv::Point(qNew->position.x(), qNew->position.y()),
+                         cv::Point(qNearest->position.x(), qNearest->position.y()), cv::Scalar(255, 0, 0));
                 imshow("Display window", display); // Show our image inside it.
                 cv::waitKey(10);
             }
