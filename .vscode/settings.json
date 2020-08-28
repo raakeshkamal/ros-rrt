@@ -1,5 +1,11 @@
 {
     "files.associations": {
-        "iostream": "cpp"
-    }
+        "iostream": "cpp",
+        "core": "cpp"
+    },
+    "python.autoComplete.extraPaths": [
+        "/home/raakesh/catkin_Ws/devel/lib/python2.7/dist-packages",
+        "/home/raakesh/Documents/catkin_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ]
 }

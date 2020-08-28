@@ -1,11 +1,24 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "ROS",
             "includePath": [
                 "${workspaceFolder}/**",
+                "/usr/include/**",
+                "/home/raakesh/catkin_Ws/devel/include/**",
+                "/home/raakesh/Documents/catkin_ws/devel/include/**",
+                "/opt/ros/melodic/include/**",
+                "/home/raakesh/catkin_Ws/src/aruco/include/**",
+                "/home/raakesh/catkin_Ws/src/aruco_ros/include/**",
+                "/home/raakesh/Documents/catkin_ws/src/crazyflie_cpp/include/**",
+                "/home/raakesh/Documents/catkin_ws/src/ros_vrpn_client/include/**",
+                "/home/raakesh/Documents/ros-rrt/catkin_ws/src/rrt/include/**",
                 "/usr/include/**"
             ],
+            "browse": {
+              "databaseFilename": "",
+              "limitSymbolsToIncludedHeaders": true
+            },
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "gnu11",

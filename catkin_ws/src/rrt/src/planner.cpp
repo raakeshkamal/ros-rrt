@@ -1,12 +1,15 @@
+#include "ros/ros.h"
+#include "std_msgs/String.h"
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 #include <Eigen/Core>
-#include <opencv2/core/eigen.hpp>
+
 #include <iostream>
-#include <unistd.h>
 #include <time.h>
+
 #include "rrt.h"
 
 using namespace std;
@@ -52,8 +55,10 @@ bool isSegmentObstacle(const cv::Mat &img, const Vector2i &nearestPos, const Vec
 
 int main(int argc, char **argv)
 {
+    ros::init(argc, argv, "rrt_node");
+    ros::NodeHandle n;
     srand(time(0));
-    cv::String path = "/home/raakesh/Documents/ros-rrt/src/map3.png";
+    cv::String path = "/home/raakesh/Documents/ros-rrt/catkin_ws/src/rrt/src/map3.png";
     cv::Mat image, display;
     image = cv::imread(path, CV_8UC1);               // Read the file
     display = cv::imread(path, CV_LOAD_IMAGE_COLOR); // Read the file
