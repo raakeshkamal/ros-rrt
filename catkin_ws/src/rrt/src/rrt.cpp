@@ -2,20 +2,22 @@
 /**
  * RRT::RRT 
  * 
+ * @param  {Vector2i} _startPos : 
+ * @param  {Vector2i} _endPos   : 
+ * @param  {int} _stepSize      : 
+ * @param  {int} _maxIter       : 
  */
-RRT::RRT()
+RRT::RRT(const Vector2i _startPos, const Vector2i _endPos, int _stepSize, int _maxIter)
 {
-    startPos.x() = START_POS_X;
-    startPos.y() = START_POS_Y;
-    endPos.x() = END_POS_X;
-    endPos.y() = END_POS_Y;
+    startPos = _startPos;
+    endPos = _endPos;
     root = new Node;
     root->parent = NULL;
     root->position = startPos;
     lastNode = root;
     nodes.push_back(root);
-    step_size = 3;
-    max_iter = 3000;
+    step_size = _stepSize;
+    max_iter = _maxIter;
 }
 /**
  * RRT 
@@ -35,14 +37,15 @@ void RRT::reset()
     nodes.push_back(root);
 }
 /**
- * RRT 
+ * Node*RRT::getRandomNode 
  * 
- * @return {Node*}  : 
+ * @param  {int} imgWidth  : 
+ * @param  {int} imgHeight : 
  */
-Node *RRT::getRandomNode()
+Node *RRT::getRandomNode(const int imgWidth, const int imgHeight)
 {
     Node *ret;
-    Vector2i point(rand() % IMG_WIDTH, rand() % IMG_HEIGHT);
+    Vector2i point(rand() % imgWidth, rand() % imgHeight);
     ret = new Node;
     ret->position = point;
     return ret;
@@ -64,7 +67,7 @@ float RRT::distance(const Vector2i &p, const Vector2i &q)
  * 
  * @param  {Vector2i} point : 
  */
-Node *RRT::nearest(Vector2i point)
+Node *RRT::nearest(const Vector2i point)
 {
     float minDist = numeric_limits<float>::max();
     Node *closest = NULL;

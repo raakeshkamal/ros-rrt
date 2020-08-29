@@ -6,8 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/raakesh/Documents/ros-rrt/catkin_ws/src/rrt/include/constants.h
-
 /home/raakesh/Documents/ros-rrt/catkin_ws/src/rrt/include/rrt.h
 stdlib.h
 -
@@ -17,8 +15,6 @@ math.h
 -
 Eigen/Core
 -
-constants.h
-/home/raakesh/Documents/ros-rrt/catkin_ws/src/rrt/include/constants.h
 
 /home/raakesh/Documents/ros-rrt/catkin_ws/src/rrt/src/planner.cpp
 ros/ros.h
