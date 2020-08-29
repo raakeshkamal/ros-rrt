@@ -57,16 +57,16 @@ Inputs to the *planner*  node can by given by simple editing the  [`rrt.launch`]
 
 		<arg name = "animate" value="true" /> <!--set to true to visualize RRT-->
 
-    ![map4 demo result](rrt/doc/map4.png)
-
     ![map1 demo result](rrt/doc/map1.gif)
+    
+    		<arg name = "animate" value="true" /> <!--set to true to visualize RRT-->
+		
+    ![map4 demo result](rrt/doc/map4.png)
 
 ## Launch
 Once you have set the required parameters in the launch file, run the RRT algo using
 
 	roslaunch rrt rrt.launch
-
-## Output
 
 ## Bugs & Feature Requests
 
