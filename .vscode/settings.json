@@ -1,7 +1,9 @@
 {
     "files.associations": {
         "iostream": "cpp",
-        "core": "cpp"
+        "core": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp"
     },
     "python.autoComplete.extraPaths": [
         "/home/raakesh/catkin_Ws/devel/lib/python2.7/dist-packages",

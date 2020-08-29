@@ -512,32 +512,32 @@ std_msgs_generate_messages_py/fast:
 	cd /home/raakesh/Documents/ros-rrt/catkin_ws/build && $(MAKE) -f rrt/CMakeFiles/std_msgs_generate_messages_py.dir/build.make rrt/CMakeFiles/std_msgs_generate_messages_py.dir/build
 .PHONY : std_msgs_generate_messages_py/fast
 
-src/mapToCV.o: src/mapToCV.cpp.o
+src/planner.o: src/planner.cpp.o
 
-.PHONY : src/mapToCV.o
+.PHONY : src/planner.o
 
 # target to build an object file
-src/mapToCV.cpp.o:
-	cd /home/raakesh/Documents/ros-rrt/catkin_ws/build && $(MAKE) -f rrt/CMakeFiles/rrt_node.dir/build.make rrt/CMakeFiles/rrt_node.dir/src/mapToCV.cpp.o
-.PHONY : src/mapToCV.cpp.o
+src/planner.cpp.o:
+	cd /home/raakesh/Documents/ros-rrt/catkin_ws/build && $(MAKE) -f rrt/CMakeFiles/rrt_node.dir/build.make rrt/CMakeFiles/rrt_node.dir/src/planner.cpp.o
+.PHONY : src/planner.cpp.o
 
-src/mapToCV.i: src/mapToCV.cpp.i
+src/planner.i: src/planner.cpp.i
 
-.PHONY : src/mapToCV.i
+.PHONY : src/planner.i
 
 # target to preprocess a source file
-src/mapToCV.cpp.i:
-	cd /home/raakesh/Documents/ros-rrt/catkin_ws/build && $(MAKE) -f rrt/CMakeFiles/rrt_node.dir/build.make rrt/CMakeFiles/rrt_node.dir/src/mapToCV.cpp.i
-.PHONY : src/mapToCV.cpp.i
+src/planner.cpp.i:
+	cd /home/raakesh/Documents/ros-rrt/catkin_ws/build && $(MAKE) -f rrt/CMakeFiles/rrt_node.dir/build.make rrt/CMakeFiles/rrt_node.dir/src/planner.cpp.i
+.PHONY : src/planner.cpp.i
 
-src/mapToCV.s: src/mapToCV.cpp.s
+src/planner.s: src/planner.cpp.s
 
-.PHONY : src/mapToCV.s
+.PHONY : src/planner.s
 
 # target to generate assembly for a file
-src/mapToCV.cpp.s:
-	cd /home/raakesh/Documents/ros-rrt/catkin_ws/build && $(MAKE) -f rrt/CMakeFiles/rrt_node.dir/build.make rrt/CMakeFiles/rrt_node.dir/src/mapToCV.cpp.s
-.PHONY : src/mapToCV.cpp.s
+src/planner.cpp.s:
+	cd /home/raakesh/Documents/ros-rrt/catkin_ws/build && $(MAKE) -f rrt/CMakeFiles/rrt_node.dir/build.make rrt/CMakeFiles/rrt_node.dir/src/planner.cpp.s
+.PHONY : src/planner.cpp.s
 
 src/rrt.o: src/rrt.cpp.o
 
@@ -602,9 +602,9 @@ help:
 	@echo "... std_msgs_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_nodejs"
 	@echo "... std_msgs_generate_messages_py"
-	@echo "... src/mapToCV.o"
-	@echo "... src/mapToCV.i"
-	@echo "... src/mapToCV.s"
+	@echo "... src/planner.o"
+	@echo "... src/planner.i"
+	@echo "... src/planner.s"
 	@echo "... src/rrt.o"
 	@echo "... src/rrt.i"
 	@echo "... src/rrt.s"

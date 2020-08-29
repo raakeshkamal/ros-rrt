@@ -2,5 +2,7 @@
   <arg name="map_file" value="/home/raakesh/Documents/ros-rrt/catkin_ws/src/rrt/maps/map.yaml">
   </arg> 
   <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"> 
+  </node>
+  <node pkg="rrt" type="rrt_node" name="planner" output="screen"> 
   </node> 
 </launch>
