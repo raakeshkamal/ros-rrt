@@ -57,14 +57,9 @@ Inputs to the *planner*  node can by given by simple editing the  [`rrt.launch`]
 
 		<arg name = "animate" value="true" /> <!--set to true to visualize RRT-->
 
-    ![Image to grid map demo result](grid_map_demos/doc/image_to_grid_map_demo_result.png)
+    ![map4 demo result](rrt/doc/map4.png)
 
-    ![OpenCV demo result](grid_map_demos/doc/opencv_demo_result.gif)
-
-    [![Filters demo results](grid_map_demos/doc/filters_demo_preview.gif)](grid_map_demos/doc/filters_demo.gif)
-
-<img src="grid_map_core/doc/interpolationSineWorld.gif" width="256" height="252">
-<img src="grid_map_core/doc/interpolationGaussWorld.gif" width="256" height="252">
+    ![map1 demo result](rrt/doc/map1.gif)
 
 ## Launch
 Once you have set the required parameters in the launch file, run the RRT algo using
