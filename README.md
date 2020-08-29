@@ -59,7 +59,7 @@ Inputs to the *planner*  node can by given by simple editing the  [`rrt.launch`]
 
     ![map1 demo result](rrt/doc/map1.gif)
     
-    		<arg name = "animate" value="true" /> <!--set to true to visualize RRT-->
+    		<arg name = "animate" value="false" /> <!--set to true to visualize RRT-->
 		
     ![map4 demo result](rrt/doc/map4.png)
 
