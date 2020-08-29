@@ -1,8 +1,0 @@
-prefix=/home/raakesh/Documents/ros-rrt/catkin_ws/install
-
-Name: rrt
-Description: Description of rrt
-Version: 0.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib -lrrt
-Requires: roscpp
