@@ -49,7 +49,7 @@ Inputs to the *planner*  node can by given by simple editing the  `rrt.launch` o
 * *stepSize* represents the step size to be used for adding new nodes.
 
 		<arg name = "stepSize" value="10.0" /> <!--step size of RRT -->
-* *neighbourFactor* represents the radius of search with respect to the step size for the nearby nodes from the new node.For example if *neighbourFactor* is 2.0 the radius of search is *2.0 x stepSize*
+* *neighbourFactor* is applicable to **RRT**.It represents the radius of search with respect to the step size for the nearby nodes from the new node.For example if *neighbourFactor* is 2.0 the radius of search is *2.0 x stepSize*
 
 		<arg name = "neighbourFactor" value="2.0"/> <!--neighbour Factor for search-->
 * *maxIter* represents the maximum number of iterations the RRT algo is supposed to run.
@@ -66,8 +66,9 @@ Inputs to the *planner*  node can by given by simple editing the  `rrt.launch` o
     ![map4 demo result](rrt/doc/map4.png)
  
  similarly for RRT*
-    ![map4 demo result1](rrtstar/doc/map4.gif)
-    ![map2 demo result](rrtstar/doc/map2.png)
+ 
+ 	![map4 demo result1](rrtstar/doc/map4.gif)
+	![map2 demo result](rrtstar/doc/map2.png)
     
 
 ## Launch
