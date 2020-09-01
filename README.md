@@ -17,7 +17,7 @@ To configure the project before building please follow the following steps:
 
 		cd catkin_ws/src
 		git clone https://github.com/raakeshkamal/ros-rrt.git
-* Add the path to your **eigen3** library in CMakeLists.txt.
+* Add the path to your **eigen3** library in CMakeLists.txt for both **rrt** and **rrtstar**.
 
 		set(EIGEN3_INCLUDE_DIRS "<path to your eigen3 library>").
 * build your package.
@@ -26,13 +26,13 @@ To configure the project before building please follow the following steps:
 		catkin_make
 ## Usage
 
-Input files are stored in the *maps* folder. The name for the input map file should be given the  [`map.yaml`](rrt/maps/map.yaml) file.
+Input files are stored in the *maps* folder for both **rrt** and **rrtStar**. The name for the input map file should be given in the  `map.yaml` file in the *maps* folder of the respective packages.
 
 	image: map3.png
 
-Inputs to the *planner*  node can by given by simple editing the  [`rrt.launch`](rrt/launch/rrt.launch) file in the *launch* folder.
+Inputs to the *planner*  node can by given by simple editing the  `rrt.launch` or `rrtStar.launch` file in the *launch* folder of the respective packages.
 
-* *map_file* is the absolute path to the  [`map.yaml`](rrt/maps/map.yaml) in the *maps* folder.
+* *map_file* is the absolute path to the  `map.yaml` in the *maps* folder.
 
 		<arg name="map_file" value="/home/raakesh/Documents/ros-rrt/catkin_ws/src/rrt/maps/map.yaml">
 
@@ -49,7 +49,10 @@ Inputs to the *planner*  node can by given by simple editing the  [`rrt.launch`]
 * *stepSize* represents the step size to be used for adding new nodes.
 
 		<arg name = "stepSize" value="10.0" /> <!--step size of RRT -->
+* *neighbourFactor* represents the radius of search with respect to the step size for the nearby nodes from the new node.For example if *neighbourFactor* is 2.0 the radius of search is *2.0 x stepSize*
 
+    
+    <arg name = "neighbourFactor" value="2.0"/> <!--neighbour Factor for search-->
 * *maxIter* represents the maximum number of iterations the RRT algo is supposed to run.
 
 		<arg name = "maxIter" value="10000" /><!--max iterations of the RRT algo-->
@@ -67,7 +70,9 @@ Inputs to the *planner*  node can by given by simple editing the  [`rrt.launch`]
 Once you have set the required parameters in the launch file, run the RRT algo using
 
 	roslaunch rrt rrt.launch
+And the RRTSTAR algo using 
 
+    roslaunch rrtstar rrtStar.launch
 ## Bugs & Feature Requests
 
 Please report bugs and request features using the [Issue Tracker](https://github.com/anybotics/grid_map/issues).
@@ -77,3 +82,4 @@ Please report bugs and request features using the [Issue Tracker](https://github
 [Eigen]: http://eigen.tuxfamily.org
 [OpenCV]: http://opencv.org/
 [nav_msgs/OccupancyGrid]: http://docs.ros.org/api/nav_msgs/html/msg/OccupancyGrid.html
+
