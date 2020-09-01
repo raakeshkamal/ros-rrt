@@ -1,0 +1,18 @@
+<launch>
+  <arg name = "startX" value="10" /> <!--  X coordinate of the starting point -->
+  <arg name = "startY" value="50" /> <!--  Y coordinate of the starting point -->
+  <arg name = "endX" value="480" /> <!--  X coordinate of the goal -->
+  <arg name = "endY" value="480" /> <!--  Y coordinate of the goal -->
+  <arg name = "stepSize" value="12.0" /> <!--step size of RRT -->
+  <arg name = "neighbourFactor" value="2.0"/>
+  <arg name = "maxIter" value="20000" /><!--max iterations of the RRT algo-->
+  <arg name = "animate" value="true" /> <!--set to true to visualize RRT-->
+  <arg name="map_file" value="/home/raakesh/Documents/cppprojects/catkin_ws/src/rrtstar/maps/map.yaml">
+  </arg> 
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"> 
+  </node>
+  <node pkg="rrtstar" type="rrtstar_node" name="planner" 
+                  args="_startX:=$(arg startX) _startY:=$(arg startY) _endX:=$(arg endX) _endY:=$(arg endY) _stepSize:=$(arg stepSize) _neighbourFactor:=$(arg neighbourFactor) _maxIter:=$(arg maxIter) _animate:=$(arg animate)" 
+                          output="screen"> 
+  </node> 
+</launch>
