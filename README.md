@@ -67,8 +67,9 @@ Inputs to the *planner*  node can by given by simple editing the  `rrt.launch` o
  
  similarly for RRT*
  
- 	![map4 demo result1](rrtstar/doc/map4.gif)
-	![map2 demo result](rrtstar/doc/map2.png)
+ ![map4 demo result1](rrtstar/doc/map4.gif)
+	
+ ![map2 demo result](rrtstar/doc/map2.png)
     
 
 ## Launch
