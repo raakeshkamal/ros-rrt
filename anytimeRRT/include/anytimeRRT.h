@@ -2,7 +2,6 @@
 #include <vector>
 #include <math.h>
 #include <Eigen/Core>
-#include <constants.h>
 
 using namespace std;
 using namespace Eigen;
@@ -18,11 +17,7 @@ struct Node
 class anytimeRRT
 {
 public:
-    ////: add function for spliting commited path and free path
-    ////: add costToGo function
-    ////: add findQmin function
-    //todo : add robot speed
-    anytimeRRT(const Vector2i _startPos, const Vector2i _endPos, int _stepSize, 
+    anytimeRRT(const Vector2i _startPos, const Vector2i _endPos, int _stepSize, int _algoSpeed,
                                             int _maxIter, int _maxRuns, float _costToGoFactor);
     void reset();
     Node *getRandomNode(const int imgWidth, const int imgHeight);
@@ -35,9 +30,8 @@ public:
     void splitTree();// * : generate commited, call deletecommited and numOfRuns--
     bool goalReached();
     void findQmin();
-    void deleteFullTree(Node *root);
-    void deleteBranch(Node* branch);// * :  remove branch and subbranch from nodes and delete the node
-    void deleteCommited();// * : remove commited nodes from tree and call deletebranch for branches
+    void deleteBranch(Node *root);
+    void rebuildNodesVec(Node *newRoot);// * : reintializes nodes from freePath
     vector<Node *> nodes;// * : remove commited nodes and branches in deleteCommited()
     vector<Node *> freePath;// * : initialize after RRT run and divide in splitTree()
     vector<Node *> completedPath;//todo : tracks the robot movement
@@ -45,10 +39,9 @@ public:
     Node *root, *currentNode, *qMin, *lastNode;//todo : currentNode is postion of node in commitedPath, qMin = node of least cost in goal region
     Vector2i startPos, endPos;
     int max_iter;
+    int algoSpeed;
     int step_size;
     int maxRuns;
-    int numOfRuns;////: maxRuns and numOfRuns-- in splitTree
+    int numOfRuns;
     float costToGoFactor;// * has to have value between 0 and 1
-    ////: add max RRT runtimes
-    ////: costToGo factor always between 0 and 1
 };

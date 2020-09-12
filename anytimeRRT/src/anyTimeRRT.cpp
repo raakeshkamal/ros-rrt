@@ -1,6 +1,7 @@
 #include <anytimeRRT.h>
+#include <iostream>
 
-anytimeRRT::anytimeRRT(const Vector2i _startPos, const Vector2i _endPos, int _stepSize,
+anytimeRRT::anytimeRRT(const Vector2i _startPos, const Vector2i _endPos, int _stepSize, int _algoSpeed,
                        int _maxIter, int _maxRuns, float _costToGoFactor)
 {
     startPos = _startPos;
@@ -14,6 +15,7 @@ anytimeRRT::anytimeRRT(const Vector2i _startPos, const Vector2i _endPos, int _st
     qMin = NULL;
     nodes.push_back(root);
     step_size = _stepSize;
+    algoSpeed = _algoSpeed;
     max_iter = _maxIter;
     maxRuns = _maxRuns;
     numOfRuns = maxRuns;
@@ -22,7 +24,7 @@ anytimeRRT::anytimeRRT(const Vector2i _startPos, const Vector2i _endPos, int _st
 
 void anytimeRRT::reset()
 {
-    deleteFullTree(root);
+    deleteBranch(root);
     nodes.clear();
     nodes.resize(0);
     freePath.clear();
@@ -130,7 +132,7 @@ void anytimeRRT::findQmin()
             cmin = qMin->cost;
         }
     }
-    if(endNodes.empty()) // * if goal not reached
+    if (endNodes.empty()) // * if goal not reached
         qMin = NULL;
 }
 
@@ -145,36 +147,29 @@ void anytimeRRT::splitTree()
         copy(first, last, commitedPath.begin());
         freePath.erase(first, last);
         root = freePath[0];
-        deleteCommited();
-        numOfRuns--;
+        nodes.clear();
+        nodes.resize(0);
+        rebuildNodesVec(root);
+        //numOfRuns--;
     }
 }
 
-void anytimeRRT::deleteFullTree(Node *root)
+void anytimeRRT::deleteBranch(Node *root)
 {
+    auto it = find(nodes.begin(), nodes.end(), root);
     for (int i = 0; i < (int)root->childern.size(); i++)
     {
-        deleteFullTree(root->childern[i]);
+        deleteBranch(root->childern[i]);
     }
+    nodes.erase(it);
     delete root;
 }
 
-void anytimeRRT::deleteBranch(Node *branch)
+void anytimeRRT::rebuildNodesVec(Node *newRoot)
 {
-    for (int i = 0; i < (int)branch->childern.size(); i++)
+    nodes.push_back(newRoot);
+    for (int i = 0; i < (int)newRoot->childern.size(); i++)
     {
-        deleteBranch(branch->childern[i]);
-    }
-    remove(nodes.begin(), nodes.end(), branch);
-    delete branch;
-}
-
-void anytimeRRT::deleteCommited()
-{
-    for (int i = 0; i < (int)commitedPath.size(); i++)
-    {
-        remove(nodes.begin(), nodes.end(), commitedPath[i]);
-        for (int j = 0; j < (int)commitedPath[i]->childern.size(); j++)
-            deleteBranch(commitedPath[i]->childern[j]);
+        rebuildNodesVec(newRoot->childern[i]);
     }
 }
