@@ -11,15 +11,15 @@ using namespace std;
 using namespace Eigen;
 
 const int STEP_SIZE = 10;
-const int ALGO_SPEED = 50;
+const int ALGO_SPEED = 200;
 const int MAX_ITER = 10000;
 const int IMAGE_WIDTH = 500;
 const int IMAGE_HEIGHT = 500;
 const Vector2i startPos(10, 10);
 const Vector2i endPos(480, 480);
-const float NEIGHBOUR_FACTOR = 2.0;
-const int MAX_RUNS = 3;
-const float costToGoFactor = 2;
+const float NEIGHBOUR_FACTOR = 3.0;
+const int MAX_RUNS = 4;
+const float costToGoFactor = 3;
 
 bool isSegmentObstacle(const cv::Mat &image, const Vector2i &nearestPos, const Vector2i &newPos)
 {
@@ -82,12 +82,41 @@ void highlightNodes(anytimeRRT *atRRT, cv::Mat screen)
 					 cv::Point(atRRT->nodes[i]->parent->position.x(), atRRT->nodes[i]->parent->position.y()), cv::Scalar(0, 255, 0));
 	}
 }
+void calculateFreePath(anytimeRRT *atRRT, Node *end, cv::Mat screen)
+{
+	Node *q = end;
+	atRRT->freePath.clear();
+	atRRT->freePath.resize(0);
+	while (q != atRRT->root)
+	{
+		atRRT->freePath.insert(atRRT->freePath.begin(), q); // * add elements in reverse
+		cv::line(screen, cv::Point(q->position.x(), q->position.y()),
+				 cv::Point(q->parent->position.x(), q->parent->position.y()), cv::Scalar(0, 0, 255));
+		q = q->parent;
+	}
+	atRRT->freePath.insert(atRRT->freePath.begin(), q); // * add elements in reverse
+}
+void highlightCommitedPath(anytimeRRT *atRRT, cv::Mat display)
+{
+	if (atRRT->commitedPath[0]->parent)
+		cv::line(display, cv::Point(atRRT->commitedPath[0]->position.x(), atRRT->commitedPath[0]->position.y()),
+				 cv::Point(atRRT->commitedPath[0]->parent->position.x(), atRRT->commitedPath[0]->parent->position.y()), cv::Scalar(0, 255, 0));
+	for (int i = 0; i < ((int)atRRT->commitedPath.size() - 1); i++)
+	{
+		cv::line(display, cv::Point(atRRT->commitedPath[i]->position.x(), atRRT->commitedPath[i]->position.y()),
+				 cv::Point(atRRT->commitedPath[i + 1]->position.x(), atRRT->commitedPath[i + 1]->position.y()), cv::Scalar(0, 255, 0));
+	}
+}
 
 void runRRTStar(anytimeRRT *atRRT, cv::Mat image, cv::Mat display)
 {
 	cv::Mat screen;
-	//todo : add robot motion to the function
-	for (int i = 0; i < atRRT->max_iter; i++)
+	int forLoopIter = atRRT->max_iter;
+	if(atRRT->numOfRuns != atRRT->maxRuns){
+		if((int)atRRT->commitedPath.size()*atRRT->algoSpeed > forLoopIter)
+			forLoopIter = (int)atRRT->commitedPath.size()*atRRT->algoSpeed;
+	}
+	for (int i = 0; i < forLoopIter; i++)
 	{
 		if (atRRT->numOfRuns != atRRT->maxRuns)
 		{
@@ -131,9 +160,9 @@ void runRRTStar(anytimeRRT *atRRT, cv::Mat image, cv::Mat display)
 					bool addQnew = false;
 					if (!atRRT->qMin)
 						addQnew = true;
-					else if ((qNew->cost + atRRT->costToGo(qNew)) < atRRT->qMin->cost)
+					else if ((qNew->cost + atRRT->costToGo(qNew)) < atRRT->qMin->cost) // * branch and bound
 						addQnew = true;
-					if (addQnew) // * branch and bound
+					if (addQnew)
 					{
 						atRRT->add(qMinCost, qNew);
 
@@ -165,57 +194,17 @@ void runRRTStar(anytimeRRT *atRRT, cv::Mat image, cv::Mat display)
 		}
 		if (atRRT->goalReached() && atRRT->numOfRuns == atRRT->maxRuns) // * only for the first RRT run
 		{
-			// * generate freepath here after every run and update freepath variable
-			cout << "First RRT run complete. Path found" << endl;
-			Node *q = atRRT->lastNode;
-			atRRT->freePath.clear();
-			atRRT->freePath.resize(0);
-			screen = display.clone();
-			while (q != atRRT->root)
-			{
-				atRRT->freePath.insert(atRRT->freePath.begin(), q); // * add elements in reverse
-				cv::line(screen, cv::Point(q->position.x(), q->position.y()),
-						 cv::Point(q->parent->position.x(), q->parent->position.y()), cv::Scalar(0, 0, 255));
-				q = q->parent;
-			}
-			atRRT->freePath.insert(atRRT->freePath.begin(), q); // * add elements in reverse
-			atRRT->splitTree();
-			break;
+			return;
 		}
 	}
-	atRRT->findQmin();
-	if (atRRT->numOfRuns != atRRT->maxRuns && atRRT->qMin)
-	{ // * from second run onwards
-		// * generate freepath here after every run and update freepath variable
-		Node *q = atRRT->qMin;
-		atRRT->freePath.clear();
-		atRRT->freePath.resize(0);
-		screen = display.clone();
-		while (q != atRRT->root)
-		{
-			atRRT->freePath.insert(atRRT->freePath.begin(), q); // * add elements in reverse
-			cv::line(screen, cv::Point(q->position.x(), q->position.y()),
-					 cv::Point(q->parent->position.x(), q->parent->position.y()), cv::Scalar(0, 0, 255));
-			q = q->parent;
-		}
-		atRRT->freePath.insert(atRRT->freePath.begin(), q); // * add elements in reverse
-		atRRT->splitTree();
-	}
-	if (!atRRT->goalReached())
-	{ // * first RRT run failure
-	}
-	atRRT->numOfRuns--;
-	if (atRRT->numOfRuns > 0)
-		buildTree(atRRT->root, screen);
-	imshow("Display window", screen); // Show our image inside it.
-	cv::waitKey(0);
+	return;
 }
 
 int main(int argc, char **argv)
 {
-	//srand(time(0));
+	srand(time(0));
 	cv::String path = "/home/raakesh/Documents/cppprojects/anytimeRRT/src/map1.png";
-	cv::Mat image, display;
+	cv::Mat image, display, screen;
 	image = cv::imread(path, CV_8UC1);				 // Read the file
 	display = cv::imread(path, CV_LOAD_IMAGE_COLOR); // Read the file
 
@@ -232,7 +221,53 @@ int main(int argc, char **argv)
 	anytimeRRT *atRRT = new anytimeRRT(startPos, endPos, STEP_SIZE, ALGO_SPEED, MAX_ITER, MAX_RUNS, costToGoFactor);
 	cv::circle(display, cv::Point(atRRT->startPos.x(), atRRT->startPos.y()), 4, cv::Scalar(0, 0, 255), cv::FILLED, cv::LINE_8);
 	cv::circle(display, cv::Point(atRRT->endPos.x(), atRRT->endPos.y()), 4, cv::Scalar(0, 255, 0), cv::FILLED, cv::LINE_8);
-	for (int i = 0; i < atRRT->maxRuns; i++)
-		runRRTStar(atRRT, image, display);
+	runRRTStar(atRRT, image, display);
+	if (!atRRT->goalReached())
+		cout << "RRT failed at first attempt. Either path doesn't exist or try with higher MAX_ITER" << endl;
+	else
+	{
+		cout << "First RRT run complete. Path found." << endl;
+		screen = display.clone();
+		buildTree(atRRT->root, screen);
+		calculateFreePath(atRRT, atRRT->lastNode, screen);
+		imshow("Display window", screen); // Show our image inside it.
+		cv::waitKey(1000);
+		atRRT->splitTree();
+		highlightCommitedPath(atRRT, display);
+		atRRT->numOfRuns--;
+		screen = display.clone();
+		if (atRRT->numOfRuns > 0)
+			buildTree(atRRT->root, screen);
+		imshow("Display window", screen); // Show our image inside it.
+		cv::waitKey(2000);
+		for (int i = 1; i < atRRT->maxRuns; i++)
+		{
+			runRRTStar(atRRT, image, display);
+			atRRT->findQmin();
+			screen = display.clone();
+			buildTree(atRRT->root, screen);
+			calculateFreePath(atRRT, atRRT->qMin, screen);
+			imshow("Display window", screen); // Show our image inside it.
+			cv::waitKey(1000);
+			atRRT->splitTree();
+			highlightCommitedPath(atRRT, display);
+			atRRT->numOfRuns--;
+			screen = display.clone();
+			if (atRRT->numOfRuns > 0)
+				buildTree(atRRT->root, screen);
+			imshow("Display window", screen); // Show our image inside it.
+			cv::waitKey(2000);
+		}
+		for (int i = 0; i < (int)atRRT->commitedPath.size(); i++)
+		{
+			atRRT->currentNode = atRRT->commitedPath[i];
+			cv::circle(display, cv::Point(atRRT->currentNode->position.x(), atRRT->currentNode->position.y()), 4,
+					   cv::Scalar(0, 0, 255), cv::FILLED, cv::LINE_8);
+			imshow("Display window", display); // Show our image inside it.
+			cv::waitKey(500);
+		}
+		imshow("Display window", display); // Show our image inside it.
+		cv::waitKey(0);
+	}
 	return 0;
 }
