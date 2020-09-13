@@ -1,4 +1,7 @@
 # ANYTIME-RRT
+## Concept
+
+The implementation provided in this ROS package is purely based on my own interpertation of [Karaman et al., 2011](https://ttic.edu/ripl/publications/karaman11.pdf). Please read the research to get a better understanding of the *Commited Trajectory* and *Branch and Bound* concepts. 
 
 ## Building from Source
 
