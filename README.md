@@ -1,4 +1,8 @@
-# ROS RRT
+# Anytime-RRT 
+
+Please refer to a seperate [README.d](anytimerrt/README.md) to understand the *anytimeRRT* ros package.
+
+# RRT & RRT*
 
 ## Building from Source
 
