@@ -23,6 +23,13 @@ RRTSTAR *rrtStar;
 bool animate;
 float NEIGHBOUR_FACTOR;
 
+/**
+ * 
+ * @param  {nav_msgs::OccupancyGrid::ConstPtr} msg : 
+ * @param  {Vector2i} nearestPos                   : 
+ * @param  {Vector2i} newPos                       : 
+ * @return {bool}                                  : 
+ */
 bool isSegmentObstacle(const nav_msgs::OccupancyGrid::ConstPtr &msg, const Vector2i &nearestPos, const Vector2i &newPos)
 {
 	std_msgs::Header header = msg->header;
@@ -30,7 +37,7 @@ bool isSegmentObstacle(const nav_msgs::OccupancyGrid::ConstPtr &msg, const Vecto
 
 	int startX, startY, endX, endY;
 
-	//create a box with startPos and newPos
+	// * create a box with startPos and newPos
 	if (nearestPos.x() < newPos.x())
 	{
 		startX = nearestPos.x();
@@ -53,7 +60,7 @@ bool isSegmentObstacle(const nav_msgs::OccupancyGrid::ConstPtr &msg, const Vecto
 		startY = newPos.y();
 	}
 
-	//check if box is occupied
+	// * check if box is occupied
 	for (int i = startX; i <= endX; i++)
 	{
 		for (int j = startY; j <= endY; j++)
@@ -65,6 +72,10 @@ bool isSegmentObstacle(const nav_msgs::OccupancyGrid::ConstPtr &msg, const Vecto
 	return false;
 }
 
+/**
+ * 
+ * @param  {nav_msgs::OccupancyGrid::ConstPtr} msg : 
+ */
 void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 {
 	std_msgs::Header header = msg->header;
@@ -72,7 +83,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 
 	cout << "Got map of dimensions " << info.width << " x " << info.height << endl;
 
-	//Error handling
+	// * Error handling
 	if (rrtStar->startPos.x() < 0 || rrtStar->startPos.y() < 0 || rrtStar->startPos.x() > info.width || rrtStar->startPos.y() > info.height)
 	{
 		cout << "Coordinates of the start point is out of bounds! Please check launch file" << endl;
@@ -108,7 +119,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 	{
 		cv::Mat display(500, 500, CV_8UC3);
 
-		//convert OccupancyGrid to cv::Mat for display
+		// * convert OccupancyGrid to cv::Mat for display
 		for (unsigned int x = 0; x < info.width; x++)
 			for (unsigned int y = 0; y < info.height; y++)
 			{
@@ -119,7 +130,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 				color[2] = pixel;
 			}
 
-		//add start Point and end Point
+		// * add start Point and end Point
 		cv::circle(display, cv::Point(rrtStar->startPos.x(), rrtStar->startPos.y()), 4, cv::Scalar(0, 0, 255), cv::FILLED, cv::LINE_8);
 		cv::circle(display, cv::Point(rrtStar->endPos.x(), rrtStar->endPos.y()), 4, cv::Scalar(0, 255, 0), cv::FILLED, cv::LINE_8);
 
@@ -138,13 +149,14 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 				{
 					Vector2i newPos = rrtStar->newConfig(q->position, qNearest->position);
 					if (!isSegmentObstacle(msg, newPos, qNearest->position))
-					{ //obstacle checks
+					{ // * obstacle checks
 						Node *qNew = new Node;
 						qNew->position = newPos;
 						vector<Node *> nearby_nodes;
 						rrtStar->nearby(qNew->position, rrtStar->step_size * NEIGHBOUR_FACTOR, nearby_nodes);
 						Node *qMinCost = qNearest;
 						float minCost = qNearest->cost + rrtStar->distance(qNearest->position, qNew->position);
+						// * search in space around qNew for least cost solution
 						for (int j = 0; j < (int)nearby_nodes.size(); j++)
 						{
 							Node *qNearby = nearby_nodes[j];
@@ -154,7 +166,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 								minCost = qNearby->cost + rrtStar->distance(qNearby->position, qNew->position);
 							}
 						}
-						rrtStar->add(qMinCost, qNew);
+						rrtStar->add(qMinCost, qNew);// * link to the least cost solution
 						if (animate)
 						{
 							cv::circle(display, cv::Point(qNew->position.x(), qNew->position.y()), 1,
@@ -163,18 +175,18 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 									 cv::Point(qMinCost->position.x(), qMinCost->position.y()), cv::Scalar(255, 0, 0));
 						}
 
-						for (int j = 0; j < (int)nearby_nodes.size(); j++)
+						for (int j = 0; j < (int)nearby_nodes.size(); j++) // * rewire the nearby nodes to optimize the cost
 						{
 							Node *qNearby = nearby_nodes[j];
 							if (!isSegmentObstacle(msg, qNew->position, qNearby->position) && (qNew->cost + rrtStar->distance(qNew->position, qNearby->position)) < qNearby->cost)
 							{
 								Node *qParentToNearby = qNearby->parent;
-								//break link between qNearby and qParentToNearby
+								// * break link between qNearby and qParentToNearby
 								if (animate)
 									cv::line(display, cv::Point(qNearby->position.x(), qNearby->position.y()),
 											 cv::Point(qParentToNearby->position.x(), qParentToNearby->position.y()), cv::Scalar(0, 0, 0));
 
-								//add link between qNew and qNearby
+								// * add link between qNew and qNearby
 								qNearby->cost = qNew->cost + rrtStar->distance(qNew->position, qNearby->position);
 								qNearby->parent = qNew;
 								qNew->childern.push_back(qNearby);
@@ -192,7 +204,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 					}
 					if (animate)
 					{
-						imshow("Display window", display); // Show our image inside it.
+						imshow("Display window", display); // * Show our image inside it.
 						cv::waitKey(10);
 					}
 				}
@@ -218,9 +230,15 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 	}
 }
 
+/**
+ * 
+ * @param  {int} argc    : 
+ * @param  {char**} argv : 
+ * @return {int}         : 
+ */
 int main(int argc, char **argv)
 {
-	srand(time(0)); //randomize the randomNode function
+	srand(time(0)); // * randomize the randomNode function
 
 	ros::init(argc, argv, "planner");
 	ros::NodeHandle nh("~");
@@ -228,7 +246,7 @@ int main(int argc, char **argv)
 	int stepSize, maxIter;
 	float neighbourFactor;
 
-	//gather inputs from launch file
+	// * gather inputs from launch file
 	nh.getParam("startX", startPos.x());
 	nh.getParam("startY", startPos.y());
 	nh.getParam("endX", endPos.x());
@@ -238,11 +256,11 @@ int main(int argc, char **argv)
 	nh.getParam("maxIter", maxIter);
 	nh.getParam("animate", animate);
 
-	rrtStar = new RRTSTAR(startPos, endPos, stepSize, maxIter); //create a RRT class instance
+	rrtStar = new RRTSTAR(startPos, endPos, stepSize, maxIter); // * create a RRT class instance
 
-	ros::Subscriber sub = nh.subscribe("/map", 1000, findPath); //subscribe to /map
+	ros::Subscriber sub = nh.subscribe("/map", 1000, findPath); // * subscribe to /map
 
-	// Don't exit the program.
+	// * Don't exit the program.
 	ros::spin();
 	return 0;
 }

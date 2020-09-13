@@ -26,22 +26,21 @@ public:
     Vector2i newConfig(const Vector2i q, const Vector2i qNearest);
     float distance(const Vector2i p, const Vector2i q);
     void add(Node *qNearest, Node *qNew);
-    float costToGo(const Node *q);
+    float costToGo(const Node *q);// * custom defined costToGo function
     void splitTree();// * : generate commited, call deletecommited and numOfRuns--
     bool goalReached();
-    void findQmin();
+    void findQmin();// * find the node with least cost in the goal region
     void deleteBranch(Node *root);
     void rebuildNodesVec(Node *newRoot);// * : reintializes nodes from freePath
     vector<Node *> nodes;// * : remove commited nodes and branches in deleteCommited()
     vector<Node *> freePath;// * : initialize after RRT run and divide in splitTree()
-    vector<Node *> completedPath;//todo : tracks the robot movement
     vector<Node *> commitedPath;// * : generate in splitTree()
-    Node *root, *currentNode, *qMin, *lastNode;//todo : currentNode is postion of node in commitedPath, qMin = node of least cost in goal region
+    Node *root, *currentNode, *qMin, *lastNode;//* : currentNode is postion of node in commitedPath, qMin = node of least cost in goal region
     Vector2i startPos, endPos;
     int max_iter;
-    int algoSpeed;
+    int algoSpeed;// * speed of the RRT algo relative with robot motion
     int step_size;
-    int maxRuns;
+    int maxRuns;// * max number of RRT runs
     int numOfRuns;
     float costToGoFactor;// * has to have value between 0 and 1
 };

@@ -1,6 +1,16 @@
 #include <anytimeRRT.h>
 #include <iostream>
-
+/**
+ * anytimeRRT::anytimeRRT 
+ * 
+ * @param  {Vector2i} _startPos    : 
+ * @param  {Vector2i} _endPos      : 
+ * @param  {int} _stepSize         : 
+ * @param  {int} _algoSpeed        : 
+ * @param  {int} _maxIter          : 
+ * @param  {int} _maxRuns          : 
+ * @param  {float} _costToGoFactor : 
+ */
 anytimeRRT::anytimeRRT(const Vector2i _startPos, const Vector2i _endPos, int _stepSize, int _algoSpeed,
                        int _maxIter, int _maxRuns, float _costToGoFactor)
 {
@@ -21,7 +31,10 @@ anytimeRRT::anytimeRRT(const Vector2i _startPos, const Vector2i _endPos, int _st
     numOfRuns = maxRuns;
     costToGoFactor = _costToGoFactor;
 }
-
+/**
+ * anytimeRRT 
+ * 
+ */
 void anytimeRRT::reset()
 {
     deleteBranch(root);
@@ -29,8 +42,6 @@ void anytimeRRT::reset()
     nodes.resize(0);
     freePath.clear();
     freePath.resize(0);
-    completedPath.clear();
-    completedPath.resize(0);
     commitedPath.clear();
     commitedPath.resize(0);
 
@@ -41,7 +52,12 @@ void anytimeRRT::reset()
     currentNode = root;
     nodes.push_back(root);
 }
-
+/**
+ * Node*anytimeRRT::getRandomNode 
+ * 
+ * @param  {int} imgWidth  : 
+ * @param  {int} imgHeight : 
+ */
 Node *anytimeRRT::getRandomNode(const int imgWidth, const int imgHeight)
 {
     Node *ret;
@@ -50,18 +66,33 @@ Node *anytimeRRT::getRandomNode(const int imgWidth, const int imgHeight)
     ret->position = point;
     return ret;
 }
-
+/**
+ * anytimeRRT 
+ * 
+ * @param  {Vector2i} p : 
+ * @param  {Vector2i} q : 
+ * @return {float}      : 
+ */
 float anytimeRRT::distance(const Vector2i p, const Vector2i q)
 {
     Vector2i r = p - q;
     return sqrt(powf(r.x(), 2) + powf(r.y(), 2));
 }
-
+/**
+ * anytimeRRT 
+ * 
+ * @param  {Node*} q : 
+ * @return {float}   : 
+ */
 float anytimeRRT::costToGo(const Node *q)
 {
     return distance(q->position, endPos) * costToGoFactor;
 }
-
+/**
+ * Node*anytimeRRT::nearest 
+ * 
+ * @param  {Vector2i} point : 
+ */
 Node *anytimeRRT::nearest(const Vector2i point)
 {
     float minDist = numeric_limits<float>::max();
@@ -77,7 +108,13 @@ Node *anytimeRRT::nearest(const Vector2i point)
     }
     return closest;
 }
-
+/**
+ * anytimeRRT 
+ * 
+ * @param  {Vector2i} point : 
+ * @param  {float} radius   : 
+ * @param  {vector<Node*} > : 
+ */
 void anytimeRRT::nearby(Vector2i point, float radius, vector<Node *> &nearby_nodes)
 {
     for (int i = 0; i < (int)nodes.size(); i++)
@@ -89,7 +126,13 @@ void anytimeRRT::nearby(Vector2i point, float radius, vector<Node *> &nearby_nod
         }
     }
 }
-
+/**
+ * anytimeRRT 
+ * 
+ * @param  {Vector2i} q        : 
+ * @param  {Vector2i} qNearest : 
+ * @return {Vector2i}          : 
+ */
 Vector2i anytimeRRT::newConfig(const Vector2i q, const Vector2i qNearest)
 {
     Vector2f direction = (q - qNearest).cast<float>();
@@ -97,7 +140,12 @@ Vector2i anytimeRRT::newConfig(const Vector2i q, const Vector2i qNearest)
     Vector2i ret = qNearest + (step_size * direction).cast<int>();
     return ret;
 }
-
+/**
+ * anytimeRRT 
+ * 
+ * @param  {Node*} qNearest : 
+ * @param  {Node*} qNew     : 
+ */
 void anytimeRRT::add(Node *qNearest, Node *qNew)
 {
     qNew->parent = qNearest;
@@ -106,7 +154,11 @@ void anytimeRRT::add(Node *qNearest, Node *qNew)
     nodes.push_back(qNew);
     lastNode = qNew;
 }
-
+/**
+ * anytimeRRT 
+ * 
+ * @return {bool}  : 
+ */
 bool anytimeRRT::goalReached()
 {
     if (distance(lastNode->position, endPos) < step_size)
@@ -114,7 +166,10 @@ bool anytimeRRT::goalReached()
     else
         return false;
 }
-
+/**
+ * anytimeRRT 
+ * 
+ */
 void anytimeRRT::findQmin()
 {
     vector<Node *> endNodes;
@@ -135,7 +190,10 @@ void anytimeRRT::findQmin()
     if (endNodes.empty()) // * if goal not reached
         qMin = NULL;
 }
-
+/**
+ * anytimeRRT 
+ * 
+ */
 void anytimeRRT::splitTree()
 {
     if (numOfRuns != 0)
@@ -153,7 +211,11 @@ void anytimeRRT::splitTree()
         //numOfRuns--;
     }
 }
-
+/**
+ * anytimeRRT 
+ * 
+ * @param  {Node*} root : 
+ */
 void anytimeRRT::deleteBranch(Node *root)
 {
     auto it = find(nodes.begin(), nodes.end(), root);
@@ -164,7 +226,11 @@ void anytimeRRT::deleteBranch(Node *root)
     nodes.erase(it);
     delete root;
 }
-
+/**
+ * anytimeRRT 
+ * 
+ * @param  {Node*} newRoot : 
+ */
 void anytimeRRT::rebuildNodesVec(Node *newRoot)
 {
     nodes.push_back(newRoot);

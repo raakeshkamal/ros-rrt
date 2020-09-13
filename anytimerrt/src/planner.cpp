@@ -21,7 +21,13 @@ using namespace Eigen;
 
 anytimeRRT *atRRT;
 float NEIGHBOUR_FACTOR;
-
+/**
+ * 
+ * @param  {nav_msgs::OccupancyGrid::ConstPtr} msg : 
+ * @param  {Vector2i} nearestPos                   : 
+ * @param  {Vector2i} newPos                       : 
+ * @return {bool}                                  : 
+ */
 bool isSegmentObstacle(const nav_msgs::OccupancyGrid::ConstPtr &msg, const Vector2i &nearestPos, const Vector2i &newPos)
 {
 	std_msgs::Header header = msg->header;
@@ -29,7 +35,7 @@ bool isSegmentObstacle(const nav_msgs::OccupancyGrid::ConstPtr &msg, const Vecto
 
 	int startX, startY, endX, endY;
 
-	//create a box with startPos and newPos
+	// * create a box with startPos and newPos
 	if (nearestPos.x() < newPos.x())
 	{
 		startX = nearestPos.x();
@@ -52,7 +58,7 @@ bool isSegmentObstacle(const nav_msgs::OccupancyGrid::ConstPtr &msg, const Vecto
 		startY = newPos.y();
 	}
 
-	//check if box is occupied
+	// * check if box is occupied
 	for (int i = startX; i <= endX; i++)
 	{
 		for (int j = startY; j <= endY; j++)
@@ -63,7 +69,11 @@ bool isSegmentObstacle(const nav_msgs::OccupancyGrid::ConstPtr &msg, const Vecto
 	}
 	return false;
 }
-
+/**
+ * 
+ * @param  {Node*} end      : 
+ * @param  {cv::Mat} screen : 
+ */
 void calculateFreePath(Node *end, cv::Mat screen)
 {
 	Node *q = end;
@@ -78,10 +88,14 @@ void calculateFreePath(Node *end, cv::Mat screen)
 	}
 	atRRT->freePath.insert(atRRT->freePath.begin(), q); // * add elements in reverse
 }
-
+/**
+ * 
+ * @param  {Node*} root     : 
+ * @param  {cv::Mat} screen : 
+ */
 void buildTree(Node *root, cv::Mat screen)
 {
-	if (root == atRRT->root)
+	if (root == atRRT->root)// * highlight root node and parent link
 	{
 		cv::circle(screen, cv::Point(root->position.x(), root->position.y()), 4,
 				   cv::Scalar(0, 255, 255), cv::FILLED, cv::LINE_8);
@@ -90,16 +104,20 @@ void buildTree(Node *root, cv::Mat screen)
 					 cv::Point(root->parent->position.x(), root->parent->position.y()), cv::Scalar(0, 255, 0));
 	}
 	else if (root == atRRT->qMin)
-		calculateFreePath(root, screen);
+		calculateFreePath(root, screen); // * highlight free path
 	cv::circle(screen, cv::Point(root->position.x(), root->position.y()), 1,
 			   cv::Scalar(0, 255, 0), cv::FILLED, cv::LINE_8);
-	for (int i = 0; i < (int)root->childern.size(); i++)
+	for (int i = 0; i < (int)root->childern.size(); i++) // * highlight node tree
 	{
 		cv::line(screen, cv::Point(root->position.x(), root->position.y()),
 				 cv::Point(root->childern[i]->position.x(), root->childern[i]->position.y()), cv::Scalar(255, 0, 0));
 		buildTree(root->childern[i], screen);
 	}
 }
+/**
+ * 
+ * @param  {cv::Mat} screen : 
+ */
 void highlightNodes(cv::Mat screen)
 {
 	for (int i = 0; i < (int)atRRT->nodes.size(); i++)
@@ -111,39 +129,48 @@ void highlightNodes(cv::Mat screen)
 					 cv::Point(atRRT->nodes[i]->parent->position.x(), atRRT->nodes[i]->parent->position.y()), cv::Scalar(0, 255, 0));
 	}
 }
+/**
+ * 
+ * @param  {cv::Mat} display : 
+ */
 void highlightCommitedPath(cv::Mat display)
 {
+	// * add parent link
 	if (atRRT->commitedPath[0]->parent)
 		cv::line(display, cv::Point(atRRT->commitedPath[0]->position.x(), atRRT->commitedPath[0]->position.y()),
 				 cv::Point(atRRT->commitedPath[0]->parent->position.x(), atRRT->commitedPath[0]->parent->position.y()), cv::Scalar(0, 255, 0));
+	// * highlight commitedPath
 	for (int i = 0; i < ((int)atRRT->commitedPath.size() - 1); i++)
 	{
 		cv::line(display, cv::Point(atRRT->commitedPath[i]->position.x(), atRRT->commitedPath[i]->position.y()),
 				 cv::Point(atRRT->commitedPath[i + 1]->position.x(), atRRT->commitedPath[i + 1]->position.y()), cv::Scalar(0, 255, 0));
 	}
 }
-
+/**
+ * 
+ * @param  {nav_msgs::OccupancyGrid::ConstPtr} msg : 
+ * @param  {cv::Mat} display                       : 
+ */
 void runRRTStar(const nav_msgs::OccupancyGrid::ConstPtr &msg, cv::Mat display)
 {
 	std_msgs::Header header = msg->header;
 	nav_msgs::MapMetaData info = msg->info;
 	cv::Mat screen;
 	int forLoopIter = atRRT->max_iter;
-	if (atRRT->numOfRuns != atRRT->maxRuns)
+	if (atRRT->numOfRuns != atRRT->maxRuns) // * adjust for robotSpeed
 	{
 		if ((int)atRRT->commitedPath.size() * atRRT->algoSpeed > forLoopIter)
 			forLoopIter = (int)atRRT->commitedPath.size() * atRRT->algoSpeed;
 	}
 	for (int i = 0; i < forLoopIter; i++)
 	{
-		if (atRRT->numOfRuns != atRRT->maxRuns)
+		if (atRRT->numOfRuns != atRRT->maxRuns)// * robot Motion
 		{
 			int currNodeIdx = (int)(i / (float)(atRRT->algoSpeed));
 			if (currNodeIdx >= (int)atRRT->commitedPath.size())
 				break;
 			else
 			{
-
 				atRRT->currentNode = atRRT->commitedPath[currNodeIdx];
 				cv::circle(display, cv::Point(atRRT->currentNode->position.x(), atRRT->currentNode->position.y()), 4,
 						   cv::Scalar(0, 0, 255), cv::FILLED, cv::LINE_8);
@@ -164,6 +191,7 @@ void runRRTStar(const nav_msgs::OccupancyGrid::ConstPtr &msg, cv::Mat display)
 					atRRT->nearby(qNew->position, atRRT->step_size * NEIGHBOUR_FACTOR, nearby_nodes);
 					Node *qMinCost = qNearest;
 					float minCost = qNearest->cost + atRRT->distance(qNearest->position, qNew->position);
+					// * look for least cost solution near the new node
 					for (int j = 0; j < (int)nearby_nodes.size(); j++)
 					{
 						Node *qNearby = nearby_nodes[j];
@@ -178,12 +206,13 @@ void runRRTStar(const nav_msgs::OccupancyGrid::ConstPtr &msg, cv::Mat display)
 					bool addQnew = false;
 					if (!atRRT->qMin)
 						addQnew = true;
-					else if ((qNew->cost + atRRT->costToGo(qNew)) < atRRT->qMin->cost) // * branch and bound
+					else if ((qNew->cost + atRRT->costToGo(qNew)) < atRRT->qMin->cost) // * branch and bound condition
 						addQnew = true;
 					if (addQnew)
 					{
 						atRRT->add(qMinCost, qNew);
-
+						
+						// * rewire the nodes nearby the new node to optimise the cost
 						for (int j = 0; j < (int)nearby_nodes.size(); j++)
 						{
 							Node *qNearby = nearby_nodes[j];
@@ -217,7 +246,10 @@ void runRRTStar(const nav_msgs::OccupancyGrid::ConstPtr &msg, cv::Mat display)
 	}
 	return;
 }
-
+/**
+ * 
+ * @param  {nav_msgs::OccupancyGrid::ConstPtr} msg : 
+ */
 void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 {
 	std_msgs::Header header = msg->header;
@@ -225,7 +257,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 
 	cout << "Got map of dimensions " << info.width << " x " << info.height << endl;
 
-	//Error handling
+	// * Error handling
 	if (atRRT->startPos.x() < 0 || atRRT->startPos.y() < 0 || atRRT->startPos.x() > info.width || atRRT->startPos.y() > info.height)
 	{
 		cout << "Coordinates of the start point is out of bounds! Please check launch file" << endl;
@@ -261,7 +293,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 		cv::Mat display(500, 500, CV_8UC3);
 		cv::Mat screen;
 
-		//convert OccupancyGrid to cv::Mat for display
+		// * convert OccupancyGrid to cv::Mat for display
 		for (unsigned int x = 0; x < info.width; x++)
 			for (unsigned int y = 0; y < info.height; y++)
 			{
@@ -272,10 +304,10 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 				color[2] = pixel;
 			}
 
-		//add start Point and end Point
+		// * add start Point and end Point
 		cv::circle(display, cv::Point(atRRT->startPos.x(), atRRT->startPos.y()), 4, cv::Scalar(0, 0, 255), cv::FILLED, cv::LINE_8);
 		cv::circle(display, cv::Point(atRRT->endPos.x(), atRRT->endPos.y()), 4, cv::Scalar(0, 255, 0), cv::FILLED, cv::LINE_8);
-		runRRTStar(msg, display);
+		runRRTStar(msg, display); // * First RRT run
 		if (!atRRT->goalReached())
 			cout << "RRT failed at first attempt. Either path doesn't exist or try with higher MAX_ITER" << endl;
 		else
@@ -284,47 +316,54 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 			screen = display.clone();
 			buildTree(atRRT->root, screen);
 			calculateFreePath(atRRT->lastNode, screen);
-			imshow("Display window", screen); // Show our image inside it.
+			imshow("Display window", screen); // * Show our image inside it.
 			cv::waitKey(1000);
-			atRRT->splitTree();
+			atRRT->splitTree();// * create a new commitedPath
 			highlightCommitedPath(display);
 			atRRT->numOfRuns--;
 			screen = display.clone();
 			if (atRRT->numOfRuns > 0)
 				buildTree(atRRT->root, screen);
-			imshow("Display window", screen); // Show our image inside it.
+			imshow("Display window", screen); // * Show our image inside it.
 			cv::waitKey(2000);
+			// * RRT runs
 			for (int i = 1; i < atRRT->maxRuns; i++)
 			{
 				runRRTStar(msg, display);
-				atRRT->findQmin();
+				atRRT->findQmin();// * find least cost node in goal region
 				screen = display.clone();
 				buildTree(atRRT->root, screen);
-				imshow("Display window", screen); // Show our image inside it.
+				imshow("Display window", screen); // * Show our image inside it.
 				cv::waitKey(1000);
-				atRRT->splitTree();
+				atRRT->splitTree();// * create a new commitedPath
 				highlightCommitedPath(display);
 				atRRT->numOfRuns--;
 				screen = display.clone();
 				if (atRRT->numOfRuns > 0)
 					buildTree(atRRT->root, screen);
-				imshow("Display window", screen); // Show our image inside it.
+				imshow("Display window", screen); // * Show our image inside it.
 				cv::waitKey(2000);
 			}
+			// * Final commited path
 			for (int i = 0; i < (int)atRRT->commitedPath.size(); i++)
 			{
 				atRRT->currentNode = atRRT->commitedPath[i];
 				cv::circle(display, cv::Point(atRRT->currentNode->position.x(), atRRT->currentNode->position.y()), 4,
 						   cv::Scalar(0, 0, 255), cv::FILLED, cv::LINE_8);
-				imshow("Display window", display); // Show our image inside it.
+				imshow("Display window", display); // * Show our image inside it.
 				cv::waitKey(500);
 			}
-			imshow("Display window", display); // Show our image inside it.
+			imshow("Display window", display); // * Show our image inside it.
 			cv::waitKey(0);
 		}
 	}
 }
-
+/**
+ * 
+ * @param  {int} argc    : 
+ * @param  {char**} argv : 
+ * @return {int}         : 
+ */
 int main(int argc, char **argv)
 {
 	srand(time(0));
@@ -336,7 +375,7 @@ int main(int argc, char **argv)
 	int stepSize, algoSpeed, maxIter, maxRuns;
 	float costToGoFactor, neighbourFactor;
 
-	//gather inputs from launch file
+	// * gather inputs from launch file
 	nh.getParam("startX", startPos.x());
 	nh.getParam("startY", startPos.y());
 	nh.getParam("endX", endPos.x());
@@ -350,9 +389,9 @@ int main(int argc, char **argv)
 
 	atRRT = new anytimeRRT(startPos, endPos, stepSize, algoSpeed, maxIter, maxRuns, costToGoFactor); //create a RRT class instance
 
-	ros::Subscriber sub = nh.subscribe("/map", 1000, findPath); //subscribe to /map
+	ros::Subscriber sub = nh.subscribe("/map", 1000, findPath); // * subscribe to /map
 
-	// Don't exit the program.
+	// * Don't exit the program.
 	ros::spin();
 	return 0;
 }

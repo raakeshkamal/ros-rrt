@@ -4,10 +4,10 @@
   <arg name = "endX" value="480" /> <!--  X coordinate of the goal -->
   <arg name = "endY" value="480" /> <!--  Y coordinate of the goal -->
   <arg name = "stepSize" value="10.0" /> <!--step size of RRT -->
-  <arg name = "algoSpeed" value="100" /> <!--step size of RRT -->
-  <arg name = "maxRuns" value="4" /> <!--step size of RRT -->
+  <arg name = "algoSpeed" value="100" /> <!--algo speed of RRT -->
+  <arg name = "maxRuns" value="4" /> <!--maximum number of RRT runs -->
   <arg name = "neighbourFactor" value="3.0"/> <!--neighbour Factor for search-->
-  <arg name = "costToGoFactor" value="3.0"/> <!--neighbour Factor for search-->
+  <arg name = "costToGoFactor" value="3.0"/> <!--cost to go factor for the branch and bound function-->
   <arg name = "maxIter" value="20000" /><!--max iterations of the RRT algo-->
   <arg name="map_file" value="/home/raakesh/Documents/cppprojects/catkin_ws/src/anytimerrt/maps/map.yaml">
   </arg> 
