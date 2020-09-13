@@ -1,36 +1,22 @@
-# ROS RRT
+# ANYTIME-RRT
 
 ## Building from Source
 
 ### Dependencies
 
-The *ros-rrt* package depends only on the linear algebra library [Eigen].
-
-	sudo apt-get install libeigen3-dev
-
-The other packages depend additionally on the [ROS] standard installation (*roscpp* and *nav_msgs*).
+Please follow the original readme for the project to setup dependencies.
 
 ### Configuration
 
-To configure the project before building please follow the following steps:
-* Add package to your catkin workspace.
+Please follow the original readme for the project to setup dependencies.
 
-		cd catkin_ws/src
-		git clone https://github.com/raakeshkamal/ros-rrt.git
-* Add the path to your **eigen3** library in CMakeLists.txt for both **rrt** and **rrtstar**.
-
-		set(EIGEN3_INCLUDE_DIRS "<path to your eigen3 library>").
-* build your package.
-
-		cd ..
-		catkin_make
 ## Usage
 
-Input files are stored in the *maps* folder for both **rrt** and **rrtstar**. The name for the input map file should be given in the  `map.yaml` file in the *maps* folder of the respective packages.
+Input files are stored in the *maps* folder. The name for the input map file should be given in the  `map.yaml` file in the *maps* folder of the respective packages.
 
 	image: map3.png
 
-Inputs to the *planner*  node can by given by simple editing the  `rrt.launch` or `rrtStar.launch` file in the *launch* folder of the respective packages.
+Inputs to the *planner*  node can by given by simple editing the  `anytimeRRT.launch` file in the *launch* folder of the respective packages.
 
 * *map_file* is the absolute path to the  `map.yaml` in the *maps* folder of the current package.
 
@@ -49,24 +35,28 @@ Inputs to the *planner*  node can by given by simple editing the  `rrt.launch` o
 * *stepSize* represents the step size to be used for adding new nodes.
 
 		<arg name = "stepSize" value="10.0" /> <!--step size of RRT -->
-* *neighbourFactor* is applicable to **RRT***.It represents the radius of search with respect to the step size for the nearby nodes from the new node.For example if *neighbourFactor* is 2.0 the radius of search is *2.0 x stepSize*
+* *algoSpeed* represents the relative speed of the **RRT*** algorithm with respect to the motion of the robot. It the number of iterations the **RRT*** algo runs for every step of the robot.
+
+        <arg name = "algoSpeed" value="100" /> <!--algo speed of RRT -->
+* *maxRuns* is the total number of **RRT*** algorithm runs. 
+
+        <arg name = "maxRuns" value="4" /> <!--maximum number of RRT runs -->
+* *costToGoFactor* is a part of the branch and bound algorithm. Higher *costToGoFactor* biases the **RRT*** algo to look for new nodes to add in and around the end point of the robot.
+
+        <arg name = "costToGoFactor" value="3.0"/> <!--cost to go factor for the branch and bound function-->
+* *neighbourFactor* represents the radius of search with respect to the step size for the nearby nodes from the new node.For example if *neighbourFactor* is 2.0 the radius of search is *2.0 x stepSize*
 
 		<arg name = "neighbourFactor" value="2.0"/> <!--neighbour Factor for search-->
 * *maxIter* represents the maximum number of iterations the RRT algo is supposed to run.
 
 		<arg name = "maxIter" value="10000" /><!--max iterations of the RRT algo-->
-* *animate* set this argument to true to visualize the RRT tree.
-
-		<arg name = "animate" value="true" /> <!--set to true to visualize RRT-->
     
 
 ## Launch
-Once you have set the required parameters in the launch file of the respective package, run the RRT algo using
+Once you have set the required parameters in the launch file of the respective package, run the anytime-RRT algo using
 
-	roslaunch rrt rrt.launch
-And the RRT* algo using 
+	roslaunch anytimerrt anytimeRRT.launch
 
-    roslaunch rrtstar rrtStar.launch
 ## Bugs & Feature Requests
 
 Please report bugs and request features using the [Issue Tracker](https://github.com/anybotics/grid_map/issues).
@@ -76,4 +66,3 @@ Please report bugs and request features using the [Issue Tracker](https://github
 [Eigen]: http://eigen.tuxfamily.org
 [OpenCV]: http://opencv.org/
 [nav_msgs/OccupancyGrid]: http://docs.ros.org/api/nav_msgs/html/msg/OccupancyGrid.html
-
