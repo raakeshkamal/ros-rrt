@@ -53,7 +53,8 @@ Inputs to the *planner*  node can by given by simple editing the  `anytimeRRT.la
 * *maxIter* represents the maximum number of iterations the RRT algo is supposed to run.
 
 		<arg name = "maxIter" value="10000" /><!--max iterations of the RRT algo-->
-    
+
+![atRRT](anytimerrt/doc/atRRT.gif)
 
 ## Launch
 Once you have set the required parameters in the launch file of the respective package, run the anytime-RRT algo using
