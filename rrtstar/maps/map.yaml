@@ -1,4 +1,4 @@
-image: map2.pgm
+image: /home/raakesh/Documents/cppprojects/catkin_ws/src/rrtApp/build-simplePaint-Desktop-Debug/st.png
 resolution: 0.1
 origin: [0.0, 0.0, 0.0]
 occupied_thresh: 0.65

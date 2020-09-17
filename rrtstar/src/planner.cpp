@@ -199,7 +199,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 			}
 			if (rrtStar->goalReached())
 			{
-				cout << "Goal reached successfully" << endl;
+				cout << "Goal reached successfully. Close window & Ctrl-C to exit" << endl;
 				Node *q = rrtStar->lastNode;
 				while (q != rrtStar->root)
 				{
@@ -224,6 +224,7 @@ int main(int argc, char **argv)
 
 	ros::init(argc, argv, "planner");
 	ros::NodeHandle nh("~");
+	
 	Vector2i startPos, endPos;
 	int stepSize, maxIter;
 	float neighbourFactor;
