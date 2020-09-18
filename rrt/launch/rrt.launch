@@ -1,8 +1,8 @@
 <launch>
-  <arg name = "startX" value="10" /> <!--  X coordinate of the starting point -->
-  <arg name = "startY" value="10" /> <!--  Y coordinate of the starting point -->
-  <arg name = "endX" value="480" /> <!--  X coordinate of the goal -->
-  <arg name = "endY" value="480" /> <!--  Y coordinate of the goal -->
+ <arg name = "startX" value="40"/>
+ <arg name = "startY" value="623"/>
+ <arg name = "endX" value="397"/>
+ <arg name = "endY" value="291"/>
   <arg name = "stepSize" value="12.0" /> <!--step size of RRT -->
   <arg name = "maxIter" value="20000" /><!--max iterations of the RRT algo-->
   <arg name = "animate" value="true" /> <!--set to true to visualize RRT-->

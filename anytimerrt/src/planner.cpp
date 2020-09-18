@@ -258,7 +258,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 	}
 	if (!ros::isShuttingDown())
 	{
-		cv::Mat display(info.width, info.height, CV_8UC3);
+		cv::Mat display(info.height, info.width, CV_8UC3);
 		cv::Mat screen;
 
 		//convert OccupancyGrid to cv::Mat for display
