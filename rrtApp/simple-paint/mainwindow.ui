@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>666</width>
-    <height>522</height>
+    <width>687</width>
+    <height>676</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,24 +32,25 @@ max-height: 20;
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QLabel" name="brushSize">
-        <property name="font">
-         <font>
-          <family>Ubuntu</family>
-          <pointsize>12</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Brush Size</string>
-        </property>
-       </widget>
-      </item>
-      <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QLabel" name="brushSize">
+       <property name="font">
+        <font>
+         <family>Ubuntu</family>
+         <pointsize>12</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Brush Size</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <property name="leftMargin">
          <number>5</number>
@@ -105,20 +106,18 @@ max-height: 20;
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="Resize">
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Resize window</string>
-        </property>
-       </widget>
-      </item>
-      <item>
+      </widget>
+      <widget class="QLabel" name="Resize">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Width X Height</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QLabel" name="widthLabel">
@@ -148,15 +147,13 @@ max-height: 20;
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="StartPos">
-        <property name="text">
-         <string>Start Pos</string>
-        </property>
-       </widget>
-      </item>
-      <item>
+      </widget>
+      <widget class="QLabel" name="StartPos">
+       <property name="text">
+        <string>Start Pos</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QLabel" name="startY">
@@ -180,15 +177,13 @@ max-height: 20;
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="EndPos">
-        <property name="text">
-         <string>End Pos</string>
-        </property>
-       </widget>
-      </item>
-      <item>
+      </widget>
+      <widget class="QLabel" name="EndPos">
+       <property name="text">
+        <string>End Pos</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QLabel" name="endX">
@@ -212,21 +207,86 @@ max-height: 20;
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
+      </widget>
+      <widget class="QLabel" name="stepSize">
+       <property name="text">
+        <string>Step Size</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="stepSizeValue">
+       <property name="maximumSize">
+        <size>
+         <width>140</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="maxIter">
+       <property name="text">
+        <string>Max. Iterations</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="maxIterValue">
+       <property name="maximumSize">
+        <size>
+         <width>140</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="neighbouFactor">
+       <property name="text">
+        <string>Neigbour Factor</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="neighbourFactorValue">
+       <property name="maximumSize">
+        <size>
+         <width>140</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="costToGoFactor">
+       <property name="text">
+        <string>Cost To Go Factor</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="costToGoFactorValue">
+       <property name="maximumSize">
+        <size>
+         <width>140</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="algoSpeed">
+       <property name="text">
+        <string>algo. Speed</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="algoSpeedValue">
+       <property name="maximumSize">
+        <size>
+         <width>140</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="maxRuns">
+       <property name="text">
+        <string>Max. Runs</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="maxRunsValue">
+       <property name="maximumSize">
+        <size>
+         <width>140</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QWidget" name="">
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <property name="topMargin">
          <number>0</number>
@@ -266,8 +326,8 @@ max-width: 64;</string>
          </widget>
         </item>
        </layout>
-      </item>
-     </layout>
+      </widget>
+     </widget>
     </item>
     <item row="0" column="1">
      <widget class="CanvasWidget" name="canvasWidget" native="true">

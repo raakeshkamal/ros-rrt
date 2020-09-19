@@ -17,11 +17,11 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QWidget>
 #include <canvaswidget.h>
 
@@ -32,27 +32,43 @@ class Ui_MainWindow
 public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
-    QVBoxLayout *verticalLayout;
+    QSplitter *splitter;
     QLabel *brushSize;
+    QWidget *widget;
     QHBoxLayout *horizontalLayout_4;
     QLabel *brushSize_label;
     QSlider *brushSize_slider;
     QLabel *Resize;
+    QWidget *widget1;
     QHBoxLayout *horizontalLayout;
     QLabel *widthLabel;
     QLabel *cross;
     QLabel *heightLabel;
     QLabel *StartPos;
+    QWidget *widget2;
     QHBoxLayout *horizontalLayout_2;
     QLabel *startY;
     QLabel *comma;
     QLabel *startX;
     QLabel *EndPos;
+    QWidget *widget3;
     QHBoxLayout *horizontalLayout_3;
     QLabel *endX;
     QLabel *comma2;
     QLabel *endY;
-    QSpacerItem *verticalSpacer;
+    QLabel *stepSize;
+    QLineEdit *stepSizeValue;
+    QLabel *maxIter;
+    QLineEdit *maxIterValue;
+    QLabel *neighbouFactor;
+    QLineEdit *neighbourFactorValue;
+    QLabel *costToGoFactor;
+    QLineEdit *costToGoFactorValue;
+    QLabel *algoSpeed;
+    QLineEdit *algoSpeedValue;
+    QLabel *maxRuns;
+    QLineEdit *maxRunsValue;
+    QWidget *widget4;
     QHBoxLayout *horizontalLayout_6;
     QPushButton *saveButton;
     QPushButton *clearAll;
@@ -62,7 +78,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(666, 522);
+        MainWindow->resize(687, 676);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         centralWidget->setStyleSheet(QLatin1String("QPushButton {\n"
@@ -83,10 +99,10 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setSpacing(6);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        brushSize = new QLabel(centralWidget);
+        splitter = new QSplitter(centralWidget);
+        splitter->setObjectName(QStringLiteral("splitter"));
+        splitter->setOrientation(Qt::Vertical);
+        brushSize = new QLabel(splitter);
         brushSize->setObjectName(QStringLiteral("brushSize"));
         QFont font;
         font.setFamily(QStringLiteral("Ubuntu"));
@@ -95,14 +111,15 @@ public:
         font.setItalic(false);
         font.setWeight(50);
         brushSize->setFont(font);
-
-        verticalLayout->addWidget(brushSize);
-
-        horizontalLayout_4 = new QHBoxLayout();
+        splitter->addWidget(brushSize);
+        widget = new QWidget(splitter);
+        widget->setObjectName(QStringLiteral("widget"));
+        horizontalLayout_4 = new QHBoxLayout(widget);
         horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
-        horizontalLayout_4->setContentsMargins(5, 0, 5, -1);
-        brushSize_label = new QLabel(centralWidget);
+        horizontalLayout_4->setContentsMargins(5, 0, 5, 0);
+        brushSize_label = new QLabel(widget);
         brushSize_label->setObjectName(QStringLiteral("brushSize_label"));
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
@@ -113,7 +130,7 @@ public:
 
         horizontalLayout_4->addWidget(brushSize_label);
 
-        brushSize_slider = new QSlider(centralWidget);
+        brushSize_slider = new QSlider(widget);
         brushSize_slider->setObjectName(QStringLiteral("brushSize_slider"));
         QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Fixed);
         sizePolicy1.setHorizontalStretch(0);
@@ -128,26 +145,26 @@ public:
 
         horizontalLayout_4->addWidget(brushSize_slider);
 
-
-        verticalLayout->addLayout(horizontalLayout_4);
-
-        Resize = new QLabel(centralWidget);
+        splitter->addWidget(widget);
+        Resize = new QLabel(splitter);
         Resize->setObjectName(QStringLiteral("Resize"));
         QFont font1;
         font1.setPointSize(12);
         Resize->setFont(font1);
-
-        verticalLayout->addWidget(Resize);
-
-        horizontalLayout = new QHBoxLayout();
+        splitter->addWidget(Resize);
+        widget1 = new QWidget(splitter);
+        widget1->setObjectName(QStringLiteral("widget1"));
+        horizontalLayout = new QHBoxLayout(widget1);
         horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        widthLabel = new QLabel(centralWidget);
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        widthLabel = new QLabel(widget1);
         widthLabel->setObjectName(QStringLiteral("widthLabel"));
 
         horizontalLayout->addWidget(widthLabel);
 
-        cross = new QLabel(centralWidget);
+        cross = new QLabel(widget1);
         cross->setObjectName(QStringLiteral("cross"));
         QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy2.setHorizontalStretch(0);
@@ -157,82 +174,121 @@ public:
 
         horizontalLayout->addWidget(cross);
 
-        heightLabel = new QLabel(centralWidget);
+        heightLabel = new QLabel(widget1);
         heightLabel->setObjectName(QStringLiteral("heightLabel"));
 
         horizontalLayout->addWidget(heightLabel);
 
-
-        verticalLayout->addLayout(horizontalLayout);
-
-        StartPos = new QLabel(centralWidget);
+        splitter->addWidget(widget1);
+        StartPos = new QLabel(splitter);
         StartPos->setObjectName(QStringLiteral("StartPos"));
-
-        verticalLayout->addWidget(StartPos);
-
-        horizontalLayout_2 = new QHBoxLayout();
+        splitter->addWidget(StartPos);
+        widget2 = new QWidget(splitter);
+        widget2->setObjectName(QStringLiteral("widget2"));
+        horizontalLayout_2 = new QHBoxLayout(widget2);
         horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        startY = new QLabel(centralWidget);
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        startY = new QLabel(widget2);
         startY->setObjectName(QStringLiteral("startY"));
 
         horizontalLayout_2->addWidget(startY);
 
-        comma = new QLabel(centralWidget);
+        comma = new QLabel(widget2);
         comma->setObjectName(QStringLiteral("comma"));
 
         horizontalLayout_2->addWidget(comma);
 
-        startX = new QLabel(centralWidget);
+        startX = new QLabel(widget2);
         startX->setObjectName(QStringLiteral("startX"));
 
         horizontalLayout_2->addWidget(startX);
 
-
-        verticalLayout->addLayout(horizontalLayout_2);
-
-        EndPos = new QLabel(centralWidget);
+        splitter->addWidget(widget2);
+        EndPos = new QLabel(splitter);
         EndPos->setObjectName(QStringLiteral("EndPos"));
-
-        verticalLayout->addWidget(EndPos);
-
-        horizontalLayout_3 = new QHBoxLayout();
+        splitter->addWidget(EndPos);
+        widget3 = new QWidget(splitter);
+        widget3->setObjectName(QStringLiteral("widget3"));
+        horizontalLayout_3 = new QHBoxLayout(widget3);
         horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        endX = new QLabel(centralWidget);
+        horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
+        endX = new QLabel(widget3);
         endX->setObjectName(QStringLiteral("endX"));
 
         horizontalLayout_3->addWidget(endX);
 
-        comma2 = new QLabel(centralWidget);
+        comma2 = new QLabel(widget3);
         comma2->setObjectName(QStringLiteral("comma2"));
 
         horizontalLayout_3->addWidget(comma2);
 
-        endY = new QLabel(centralWidget);
+        endY = new QLabel(widget3);
         endY->setObjectName(QStringLiteral("endY"));
 
         horizontalLayout_3->addWidget(endY);
 
-
-        verticalLayout->addLayout(horizontalLayout_3);
-
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout->addItem(verticalSpacer);
-
-        horizontalLayout_6 = new QHBoxLayout();
+        splitter->addWidget(widget3);
+        stepSize = new QLabel(splitter);
+        stepSize->setObjectName(QStringLiteral("stepSize"));
+        splitter->addWidget(stepSize);
+        stepSizeValue = new QLineEdit(splitter);
+        stepSizeValue->setObjectName(QStringLiteral("stepSizeValue"));
+        stepSizeValue->setMaximumSize(QSize(140, 30));
+        splitter->addWidget(stepSizeValue);
+        maxIter = new QLabel(splitter);
+        maxIter->setObjectName(QStringLiteral("maxIter"));
+        splitter->addWidget(maxIter);
+        maxIterValue = new QLineEdit(splitter);
+        maxIterValue->setObjectName(QStringLiteral("maxIterValue"));
+        maxIterValue->setMaximumSize(QSize(140, 30));
+        splitter->addWidget(maxIterValue);
+        neighbouFactor = new QLabel(splitter);
+        neighbouFactor->setObjectName(QStringLiteral("neighbouFactor"));
+        splitter->addWidget(neighbouFactor);
+        neighbourFactorValue = new QLineEdit(splitter);
+        neighbourFactorValue->setObjectName(QStringLiteral("neighbourFactorValue"));
+        neighbourFactorValue->setMaximumSize(QSize(140, 30));
+        splitter->addWidget(neighbourFactorValue);
+        costToGoFactor = new QLabel(splitter);
+        costToGoFactor->setObjectName(QStringLiteral("costToGoFactor"));
+        splitter->addWidget(costToGoFactor);
+        costToGoFactorValue = new QLineEdit(splitter);
+        costToGoFactorValue->setObjectName(QStringLiteral("costToGoFactorValue"));
+        costToGoFactorValue->setMaximumSize(QSize(140, 30));
+        splitter->addWidget(costToGoFactorValue);
+        algoSpeed = new QLabel(splitter);
+        algoSpeed->setObjectName(QStringLiteral("algoSpeed"));
+        splitter->addWidget(algoSpeed);
+        algoSpeedValue = new QLineEdit(splitter);
+        algoSpeedValue->setObjectName(QStringLiteral("algoSpeedValue"));
+        algoSpeedValue->setMaximumSize(QSize(140, 30));
+        splitter->addWidget(algoSpeedValue);
+        maxRuns = new QLabel(splitter);
+        maxRuns->setObjectName(QStringLiteral("maxRuns"));
+        splitter->addWidget(maxRuns);
+        maxRunsValue = new QLineEdit(splitter);
+        maxRunsValue->setObjectName(QStringLiteral("maxRunsValue"));
+        maxRunsValue->setMaximumSize(QSize(140, 30));
+        splitter->addWidget(maxRunsValue);
+        widget4 = new QWidget(splitter);
+        widget4->setObjectName(QStringLiteral("widget4"));
+        horizontalLayout_6 = new QHBoxLayout(widget4);
         horizontalLayout_6->setSpacing(6);
+        horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
-        horizontalLayout_6->setContentsMargins(-1, 0, -1, -1);
-        saveButton = new QPushButton(centralWidget);
+        horizontalLayout_6->setContentsMargins(0, 0, 0, 0);
+        saveButton = new QPushButton(widget4);
         saveButton->setObjectName(QStringLiteral("saveButton"));
         saveButton->setStyleSheet(QLatin1String("min-width: 64;\n"
 "max-width: 64;"));
 
         horizontalLayout_6->addWidget(saveButton);
 
-        clearAll = new QPushButton(centralWidget);
+        clearAll = new QPushButton(widget4);
         clearAll->setObjectName(QStringLiteral("clearAll"));
         clearAll->setMinimumSize(QSize(66, 32));
         clearAll->setMaximumSize(QSize(66, 32));
@@ -241,11 +297,9 @@ public:
 
         horizontalLayout_6->addWidget(clearAll);
 
+        splitter->addWidget(widget4);
 
-        verticalLayout->addLayout(horizontalLayout_6);
-
-
-        gridLayout->addLayout(verticalLayout, 0, 0, 1, 1);
+        gridLayout->addWidget(splitter, 0, 0, 1, 1);
 
         canvasWidget = new CanvasWidget(centralWidget);
         canvasWidget->setObjectName(QStringLiteral("canvasWidget"));
@@ -270,7 +324,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Simple Paint", Q_NULLPTR));
         brushSize->setText(QApplication::translate("MainWindow", "Brush Size", Q_NULLPTR));
         brushSize_label->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
-        Resize->setText(QApplication::translate("MainWindow", "Resize window", Q_NULLPTR));
+        Resize->setText(QApplication::translate("MainWindow", "Width X Height", Q_NULLPTR));
         widthLabel->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
         cross->setText(QApplication::translate("MainWindow", "X", Q_NULLPTR));
         heightLabel->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
@@ -282,6 +336,12 @@ public:
         endX->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
         comma2->setText(QApplication::translate("MainWindow", ",", Q_NULLPTR));
         endY->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
+        stepSize->setText(QApplication::translate("MainWindow", "Step Size", Q_NULLPTR));
+        maxIter->setText(QApplication::translate("MainWindow", "Max. Iterations", Q_NULLPTR));
+        neighbouFactor->setText(QApplication::translate("MainWindow", "Neigbour Factor", Q_NULLPTR));
+        costToGoFactor->setText(QApplication::translate("MainWindow", "Cost To Go Factor", Q_NULLPTR));
+        algoSpeed->setText(QApplication::translate("MainWindow", "algo. Speed", Q_NULLPTR));
+        maxRuns->setText(QApplication::translate("MainWindow", "Max. Runs", Q_NULLPTR));
         saveButton->setText(QApplication::translate("MainWindow", "Save", Q_NULLPTR));
         clearAll->setText(QApplication::translate("MainWindow", "Clear all", Q_NULLPTR));
     } // retranslateUi

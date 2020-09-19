@@ -15,6 +15,24 @@ MainWindow::MainWindow(int argc, char *argv[],QWidget *parent) : QMainWindow(par
     rrtStar = false;
     anytimeRRT = false;
 
+    ui->stepSizeValue->setPlaceholderText("0 - 100");
+    ui->stepSizeValue->setValidator(new QIntValidator(0,100,this));
+
+    ui->maxIterValue->setPlaceholderText("any interger");
+    ui->maxIterValue->setValidator(new QIntValidator(0,2147483647,this));
+
+    ui->neighbourFactorValue->setPlaceholderText("0.0 - 10.0");
+    ui->neighbourFactorValue->setValidator(new QDoubleValidator(0.0,10.0,1,this));
+
+    ui->costToGoFactorValue->setPlaceholderText("0.0 - 25.0");
+    ui->costToGoFactorValue->setValidator(new QDoubleValidator(0.0,25.0,1,this));
+
+    ui->algoSpeedValue->setPlaceholderText("0 - 100000");
+    ui->algoSpeedValue->setValidator(new QIntValidator(0,1000000,this));
+
+    ui->maxRunsValue->setPlaceholderText("0 - 50");
+    ui->maxRunsValue->setValidator(new QIntValidator(0,50,this));
+
 
     if(QString::compare(QString::fromUtf8(argv[1]),"rrt") == 0)
         rrt = true;
@@ -22,6 +40,29 @@ MainWindow::MainWindow(int argc, char *argv[],QWidget *parent) : QMainWindow(par
         rrtStar = true;
     else if(QString::compare(QString::fromUtf8(argv[1]),"anytimerrt") == 0)
         anytimeRRT = true;
+
+    if(rrtStar){
+        ui->costToGoFactor->setVisible(false);
+        ui->costToGoFactorValue->setVisible(false);
+        ui->algoSpeed->setVisible(false);
+        ui->algoSpeedValue->setVisible(false);
+        ui->maxRuns->setVisible(false);
+        ui->maxRunsValue->setVisible(false);
+        this->setWindowTitle("RRT Star");
+    }
+    else if(rrt){
+        ui->neighbouFactor->setVisible(false);
+        ui->neighbourFactorValue->setVisible(false);
+        ui->costToGoFactor->setVisible(false);
+        ui->costToGoFactorValue->setVisible(false);
+        ui->algoSpeed->setVisible(false);
+        ui->algoSpeedValue->setVisible(false);
+        ui->maxRuns->setVisible(false);
+        ui->maxRunsValue->setVisible(false);
+        this->setWindowTitle("RRT");
+    }
+    else
+        this->setWindowTitle("Anytime RRT");
 
     yamlData[0] = "image: map1.png";
     yamlData[1] = "resolution: 0.1";
@@ -158,6 +199,17 @@ void MainWindow::on_saveButton_clicked()
     launchData[2] =   " <arg name = \"startY\" value=\"" + startY + "\"/>";
     launchData[3] =   " <arg name = \"endX\" value=\"" + endX + "\"/>";
     launchData[4] =   " <arg name = \"endY\" value=\"" + endY + "\"/>";
+    launchData[5] =   " <arg name = \"stepSize\" value=\"" + ui->stepSizeValue->text() + "\"/>";
+    launchData[6] =   " <arg name = \"maxIter\" value=\"" + ui->maxIterValue->text() + "\"/>";
+    if(rrtStar){
+    launchData[7] =   " <arg name = \"neighbourFactor\" value=\"" + ui->neighbourFactorValue->text() + "\"/>";
+    }
+    else if(anytimeRRT){
+    launchData[7] =   " <arg name = \"neighbourFactor\" value=\"" + ui->neighbourFactorValue->text() + "\"/>";
+    launchData[8] =   " <arg name = \"costToGoFactor\" value=\"" + ui->costToGoFactorValue->text() + "\"/>";
+    launchData[9] =   " <arg name = \"algoSpeed\" value=\"" + ui->algoSpeedValue->text() + "\"/>";
+    launchData[10] =   " <arg name = \"maxRuns\" value=\"" + ui->maxRunsValue->text() + "\"/>";
+    }
     if (!launch.open(QFile::WriteOnly |
                    QFile::Text))
     {
