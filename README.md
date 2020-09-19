@@ -1,3 +1,7 @@
+# RRT GUI 
+
+Please refer to a seperate [README.md](rrtApp/README.md) to understand the *RRT GUI* application. 
+
 # Anytime-RRT 
 
 Please refer to a seperate [README.md](anytimerrt/README.md) to understand the *anytimeRRT* ros package.
