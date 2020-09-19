@@ -290,7 +290,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 	}
 	if (!ros::isShuttingDown())
 	{
-		cv::Mat display(500, 500, CV_8UC3);
+		cv::Mat display(info.height, info.width, CV_8UC3);
 		cv::Mat screen;
 
 		// * convert OccupancyGrid to cv::Mat for display
@@ -355,6 +355,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 			}
 			imshow("Display window", display); // * Show our image inside it.
 			cv::waitKey(0);
+			cout << "Complete. Close window & Ctrl-C to exit" << endl;
 		}
 	}
 }

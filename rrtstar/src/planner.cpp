@@ -117,7 +117,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 
 	if (!ros::isShuttingDown())
 	{
-		cv::Mat display(500, 500, CV_8UC3);
+		cv::Mat display(info.height, info.width, CV_8UC3);
 
 		// * convert OccupancyGrid to cv::Mat for display
 		for (unsigned int x = 0; x < info.width; x++)
@@ -211,7 +211,7 @@ void findPath(const nav_msgs::OccupancyGrid::ConstPtr &msg)
 			}
 			if (rrtStar->goalReached())
 			{
-				cout << "Goal reached successfully" << endl;
+				cout << "Goal reached successfully. Close window & Ctrl-C to exit" << endl;
 				Node *q = rrtStar->lastNode;
 				while (q != rrtStar->root)
 				{
@@ -242,6 +242,7 @@ int main(int argc, char **argv)
 
 	ros::init(argc, argv, "planner");
 	ros::NodeHandle nh("~");
+	
 	Vector2i startPos, endPos;
 	int stepSize, maxIter;
 	float neighbourFactor;

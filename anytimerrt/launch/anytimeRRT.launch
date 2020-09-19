@@ -1,21 +1,15 @@
 <launch>
-  <arg name = "startX" value="10" /> <!--  X coordinate of the starting point -->
-  <arg name = "startY" value="10" /> <!--  Y coordinate of the starting point -->
-  <arg name = "endX" value="480" /> <!--  X coordinate of the goal -->
-  <arg name = "endY" value="480" /> <!--  Y coordinate of the goal -->
-  <arg name = "stepSize" value="10.0" /> <!--step size of RRT -->
-  <arg name = "algoSpeed" value="100" /> <!--algo speed of RRT -->
-  <arg name = "maxRuns" value="4" /> <!--maximum number of RRT runs -->
-  <arg name = "neighbourFactor" value="3.0"/> <!--neighbour Factor for search-->
-  <arg name = "costToGoFactor" value="3.0"/> <!--cost to go factor for the branch and bound function-->
-  <arg name = "maxIter" value="20000" /><!--max iterations of the RRT algo-->
-  <arg name="map_file" value="/home/raakesh/Documents/cppprojects/catkin_ws/src/anytimerrt/maps/map.yaml">
-  </arg> 
-  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"> 
-  </node>
-  <node pkg="anytimerrt" type="anytimerrt_node" name="planner" 
-                  args="_startX:=$(arg startX) _startY:=$(arg startY) _endX:=$(arg endX) _endY:=$(arg endY) _stepSize:=$(arg stepSize) 
-                        _algoSpeed:=$(arg algoSpeed) _maxRuns:=$(arg maxRuns) _neighbourFactor:=$(arg neighbourFactor) _costToGoFactor:=$(arg costToGoFactor) _maxIter:=$(arg maxIter)" 
-                          output="screen"> 
-  </node> 
+ <arg name = "startX" value="537"/>
+ <arg name = "startY" value="875"/>
+ <arg name = "endX" value="529"/>
+ <arg name = "endY" value="472"/>
+ <arg name = "stepSize" value="15"/>
+ <arg name = "maxIter" value="15000"/>
+ <arg name = "neighbourFactor" value="3"/>
+ <arg name = "costToGoFactor" value="2"/>
+ <arg name = "algoSpeed" value="250"/>
+ <arg name = "maxRuns" value="6"/>
+  <arg name="map_file" value="/home/raakesh/Documents/cppprojects/catkin_ws/src/anytimerrt/maps/map.yaml" /> 
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" />
+  <node pkg="anytimerrt" type="anytimerrt_node" name="planner" args="_startX:=$(arg startX) _startY:=$(arg startY) _endX:=$(arg endX) _endY:=$(arg endY) _stepSize:=$(arg stepSize) _algoSpeed:=$(arg algoSpeed) _maxRuns:=$(arg maxRuns) _neighbourFactor:=$(arg neighbourFactor) _costToGoFactor:=$(arg costToGoFactor) _maxIter:=$(arg maxIter)" output="screen" /> 
 </launch>
