@@ -1,88 +1,83 @@
-# Anytime-RRT 
+# RRT GUI
 
-Please refer to a seperate [README.md](anytimerrt/README.md) to understand the *anytimeRRT* ros package.
-
-# RRT & RRT*
+This is a simple GUI for accessing and working with the other three RRT packages. Its build using Qt5.x framework for cross platform GUI building using C++.
 
 ## Building from Source
 
 ### Dependencies
 
-The *ros-rrt* package depends only on the linear algebra library [Eigen].
+Please follow the README.md for the other three RRT packages and install their respective dependencies. The GUI application need QT5.x package installed for it to work.It the package using
 
-	sudo apt-get install libeigen3-dev
+	sudo apt-get install qt5-default
 
-The other packages depend additionally on the [ROS] standard installation (*roscpp* and *nav_msgs*).
+For further info please follow [link](https://wiki.qt.io/Install_Qt_5_on_Ubuntu)
 
 ### Configuration
 
-To configure the project before building please follow the following steps:
-* Add package to your catkin workspace.
+The GUI application and ROS packages are completely independent and are linked together by shell scripts namely **rrt.sh**, **rrtStar.sh**, **anytimeRRT.sh**.
 
-		cd catkin_ws/src
-		git clone https://github.com/raakeshkamal/ros-rrt.git
-* Add the path to your **eigen3** library in CMakeLists.txt for both **rrt** and **rrtstar**.
+	For the application to work all the packages and GUI application has to be in the same catkin workspace.
 
-		set(EIGEN3_INCLUDE_DIRS "<path to your eigen3 library>").
-* build your package.
+* Move to the GUI application folder
 
-		cd ..
-		catkin_make
+		cd rrtApp/simple-paint
+* Run the follow commands to compile the GUI app
+
+		make distclean
+		qmake
+		qmake simplePaint.pro
+		make
+* Give executable permission to the shell scripts
+
+		sudo chmod 755 rrt.sh
+		sudo chmod 755 rrtStar.sh
+		sudo chmod 755 anytimeRRT.sh
 ## Usage
 
-Input files are stored in the *maps* folder for both **rrt** and **rrtstar**. The name for the input map file should be given in the  `map.yaml` file in the *maps* folder of the respective packages.
-
-	image: map3.png
-
-Inputs to the *planner*  node can by given by simple editing the  `rrt.launch` or `rrtStar.launch` file in the *launch* folder of the respective packages.
-
-* *map_file* is the absolute path to the  `map.yaml` in the *maps* folder of the current package.
-
-		<arg name="map_file" value="/home/raakesh/Documents/ros-rrt/catkin_ws/src/rrt/maps/map.yaml">
-
-* *startX & startY*  represent the ( x , y ) coordinates of the starting point or the root of the RRT tree.
-
-		<arg name = "startX" value="480" /> <!--  X coordinate of the starting point -->
-		<arg name = "startY" value="480" /> <!--  Y coordinate of the starting point -->
-
-* *endX & endY*  represent the ( x , y ) coordinates of the end point or the goal of the RRT algo.
-
-		<arg name = "endX" value="10" /> <!--  X coordinate of the goal -->
-		<arg name = "endY" value="10" /> <!--  Y coordinate of the goal -->
-
-* *stepSize* represents the step size to be used for adding new nodes.
-
-		<arg name = "stepSize" value="10.0" /> <!--step size of RRT -->
-* *neighbourFactor* is applicable to **RRT***.It represents the radius of search with respect to the step size for the nearby nodes from the new node.For example if *neighbourFactor* is 2.0 the radius of search is *2.0 x stepSize*
-
-		<arg name = "neighbourFactor" value="2.0"/> <!--neighbour Factor for search-->
-* *maxIter* represents the maximum number of iterations the RRT algo is supposed to run.
-
-		<arg name = "maxIter" value="10000" /><!--max iterations of the RRT algo-->
-* *animate* set this argument to true to visualize the RRT tree.
-
-		<arg name = "animate" value="true" /> <!--set to true to visualize RRT-->
-
-    ![map1 demo result](rrt/doc/map1.gif)
-    
-    		<arg name = "animate" value="false" /> <!--set to true to visualize RRT-->
+Run the shell script for the package that you want to work with. For example to run rrt package use
 		
-    ![map4 demo result](rrt/doc/map4.png)
- 
- similarly for RRT*
- 
- ![map4 demo result1](rrtstar/doc/map4.gif)
-	
- ![map2 demo result](rrtstar/doc/map2.png)
-    
+	cd rrtApp/simple-paint
+	./rrt.sh
 
-## Launch
-Once you have set the required parameters in the launch file of the respective package, run the RRT algo using
+If your **roscore** is running you will be greeted with the window below
 
-	roslaunch rrt rrt.launch
-And the RRT* algo using 
+![rrt.png](docs/RRT.png)
 
-    roslaunch rrtstar rrtStar.launch
+Similarly for **./rrtStar.sh** and **./anytimeRRT.sh**
+
+![rrtstar.png](docs/rrtStar.png)
+
+![anytime.png](docs/anytimeRRT.png)
+
+### Inputs
+
+* Resize the window to change the size of the input image to the RRT algo. 
+
+		Warning : The minimum height for the input image is restricted to the height of the input window panel
+
+* The red and green pointer represent the start and end positional inputs for the RRT algo respectively. Move the pointer in the image to change the start and end position.
+
+		Warning : Move the pointers slowly as the GUI fails to respond to rapid mouse movements
+
+* Fill the input parameters as shown in the respective GUI windows.
+
+		Info : Stick to the limits mentioned in the input windows. Please refer to the package readme files for clarity on the parameters
+
+* Paint on the canvas using mouse inputs and adjust **Brush size** if needed.
+* Click **Clear All** to reset the painter canvas and create a fresh drawing.
+
+![inputs](docs/input.gif)
+
+* Click **Save** to save the canvas image and feed it as input to the RRT algo. 
+
+		Warning : Add the appropriate extension while saving the file.
+		Info : After a successful save the window will close and the ROS node starts running automatically.
+
+![save](docs/save.gif)
+
+
+![final](docs/final.gif)
+
 ## Bugs & Feature Requests
 
 Please report bugs and request features using the [Issue Tracker](https://github.com/anybotics/grid_map/issues).
